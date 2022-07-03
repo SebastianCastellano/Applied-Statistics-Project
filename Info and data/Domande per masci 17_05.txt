@@ -1,0 +1,28 @@
+1) I test (math, reading,scie) sono uguali in tutti gli stati? Perchè volevamo mettere a confronto i risultati degli immigrati
+nei diversi paesi ma ha senso confrontare il punteggio? 
+Ad esempio, il reading può essere diverso o è uguale e tradotto in ciascun paese? 
+Anche scienze, se hanno programmi diversi?
+
+2) Come decidere se usare un modello lineare o una ANOVA?
+Cioè ad esempio se consideriamo solo la popolazione immigrata, e volessimo stabilire se la lingua parlata
+a casa influisce sullo score dei test, ci conviene confrontare le medie o creare un modello lineare
+in cui usiamo la lingua parlata a casa come dummy variable e guardassimo se il coef è diverso da 0?
+
+3) Se vogliamo fare una manova mettendo a confronto la media gli scores dei vari stati, c'è un modo veloce
+al posto di scrivere gli intervalli di confidenza 10*9/2 = 45 volte? 
+
+4) Design matrix: quanto si applica nel nostro caso se vogliamo piu spiegare che predirre?
+Per ottenere dei regressors uncorrelati e minimum variance è meglio usare PCA OLS?
+
+5) manova p.value della normalità non molto positivi (tranne gli score dei test)
+
+6) Consigli sul PCA
+
+7) Chiedere sul futuro del nostro progetto. Nel senso consigli
+
+8) GLi NA? Per ora li abbiamo solo tolti...
+
+9) Aggiungendo piu variabili alla manova, rischiamo di avere un risultato piu "grezzo"?
+Anche perche le ipotesi di normalità sarà sempre piu difficile garantirle.
+Inoltre, una volta proiettati gli intervalli di confidenza sono indipendenti l'uno dall'altro oppure no?
+Ha piu senso fare due manove separate? 

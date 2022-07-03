@@ -1,0 +1,22 @@
+Lucia e seba
+Separato i dataset immigrati e native:
+
+Immigrati:
+Language, escs status, bullied, teacher support (poco significativo, 1 asterisco)
+
+Native:
+Language (dialetto), escs status, family wealth (negativamente correlate)
+
+Domanda: gli R2 sono molto bassi, ha senso procedere dal punto di vista interpretativo?
+
+Idee:
+Controllare correlazione e ridurre i regressori(ESCS e il resto)
+Confrontare stesso modello su piu paesi. Come cambiano i coefficienti? Cambiano in base al ranking
+creato da noi tra paesi?
+Analizzare la gran bretagna come caso particolare.
+Aggiungere random effects con la scuola/la regione/i paesi.
+Meglio separare il dataset in nativi/immigrati?
+
+
+
+
