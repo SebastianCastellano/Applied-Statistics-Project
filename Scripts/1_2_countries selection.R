@@ -51,47 +51,59 @@ UKR = student[which(student$CNTRYID==804),]
 MKD = student[which(student$CNTRYID==807),]
 GBR = student[which(student$CNTRYID==826),]
 
-#Write tables
-write.table(ITA,file='italy.txt')
-write.table(ALB,file='albania.txt')
-write.table(AUT,file='austria.txt')
-write.table(BEL,file='belgium.txt')
-write.table(BGR,file='bulgaria.txt')
-write.table(BIH,file='bosnia.txt')
-write.table(BLR,file='belarus.txt')
-write.table(HRV,file='croatia.txt')
-write.table(CZE,file='czechrep.txt')
-write.table(DNK,file='denmark.txt')
-write.table(EST,file='estonia.txt')
-write.table(FIN,file='finland.txt')
-write.table(FRA,file='france.txt')
-write.table(DEU,file='germany.txt')
-write.table(GRC,file='greece.txt')
-write.table(HUN,file='hungary.txt')
-write.table(ISL,file='iceland.txt')
-write.table(KSV,file='kosovo.txt')
-write.table(LVA,file='latvia.txt')
-write.table(LTU,file='lithuania.txt')
-write.table(LUX,file='luxembourg.txt')
-write.table(MLT,file='malta.txt')
-write.table(MDA,file='moldova.txt')
-write.table(MNE,file='montenegro.txt')
-write.table(NDL,file='netherlands.txt')
-write.table(NOR,file='norway.txt')
-write.table(POL,file='poland.txt')
-write.table(PRT,file='portugal.txt')
-write.table(ROU,file='romania.txt')
-write.table(SRB,file='serbia.txt')
-write.table(SVK,file='slovakia.txt')
-write.table(SVN,file='slovenia.txt')
-write.table(ESP,file='spain.txt')
-write.table(SWE,file='sweden.txt')
-write.table(CHE,file='swiss.txt')
-write.table(TUR,file='turkey.txt')
-write.table(UKR,file='ukraine.txt')
-write.table(MKD,file='northmac.txt')
-write.table(GBR,file='greatbrit.txt')
+#List of countries
+countries = list(ITA, ALB, AUT, BEL, BIH, BGR, BLR, HRV, CZE, DNK, EST, FIN, FRA, DEU, GRC, HUN, ISL, KSV, LVA,
+                 LTU, LUX, MLT, MDA, MNE, NDL, NOR, POL, PRT, ROU, SRB, SVK, SVN, ESP, SWE, CHE, TUR, UKR, MKD, GBR)
 
-#In script countries_selection.R we proceed with selecting the subset of countries to use in our analysis
+#List of names of countries
+name_countries = c('ITA', 'ALB', 'AUT', 'BEL', 'BIH', 'BGR', 'BLR', 'HRV', 'CZE', 'DNK', 'EST', 'FIN', 'FRA',
+                   'DEU', 'GRC', 'HUN', 'ISL', 'KSV', 'LVA', 'LTU', 'LUX', 'MLT', 'MDA', 'MNE', 'NDL', 'NOR',
+                   'POL', 'PRT', 'ROU', 'SRB', 'SVK', 'SVN', 'ESP', 'SWE', 'CHE', 'TUR', 'UKR', 'MKD', 'GBR')
+
+#Select countries with enough immigrant data
+
+#Initialize params & vectors
+n_countries = length(countries)  # there are 39 european countries
+stud_country = rep(0,n_countries)
+immig_stud_country = rep(0,n_countries)
+immig_stud_1stgen_country = rep(0,n_countries)
+immig_stud_2ndgen_country = rep(0,n_countries)
+
+#Extract lengths and num of immig stud per country (the variable IMMIG has 1 = native, 2 = second gen, 3 = first gen)
+for (i in 1:n_countries) {
+  stud_country[i] = dim(countries[[i]])[1]  #notice: this number does not account for missing values
+  immig_stud_country[i] = sum(na.omit(countries[[i]]$IMMIG==2 | countries[[i]]$IMMIG==3))
+  immig_stud_1stgen_country[i] = sum(na.omit(countries[[i]]$IMMIG==3))
+  immig_stud_2ndgen_country[i] = sum(na.omit(countries[[i]]$IMMIG==2))
+}
+
+#Plot
+x11()
+df_bar <- barplot(stud_country, main = "Students per Country - OECD Pisa 2018", ylab = "Number of students", xlab = "Countries",  
+                  ylim = c(0,12000), names.arg = name_countries, las=2) #las=2 -> rotates names.arg
+points(x = df_bar, y=immig_stud_country, col="red", pch=19)
+points(x = df_bar, y=immig_stud_1stgen_country, col="blue", pch=19)
+points(x = df_bar, y=immig_stud_2ndgen_country, col="purple", pch=19)
+legend(n_countries/2, 12000, c("Immig stud total","First gen immig stud","Second gen immig stud"), 
+       pch = c(19,19,19), col = c("red","blue","purple"), cex = 1)
+abline(h=1000) 
+
+#Select countries with enough sample size
+countries_selected = countries[which(immig_stud_country>1000)]
+name_countries_selected = name_countries[which(immig_stud_country>1000)]
+#We select 10 countries:
+# name_countries_selected = list("ITA", "AUT", "BEL", "DNK", "DEU",
+#                                  "LUX", "ESP", "SWE", "CHE", "GBR")
 
 
+#Write tables (already run)
+# write.table(ITA,file='italy.txt')
+# write.table(AUT,file='austria.txt')
+# write.table(BEL,file='belgium.txt')
+# write.table(DNK,file='denmark.txt')
+# write.table(DEU,file='germany.txt')
+# write.table(LUX,file='luxembourg.txt')
+# write.table(ESP,file='spain.txt')
+# write.table(SWE,file='sweden.txt')
+# write.table(CHE,file='swiss.txt')
+# write.table(GBR,file='greatbrit.txt')

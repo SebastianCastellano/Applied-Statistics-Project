@@ -10,7 +10,7 @@ library(labstatR)
 ############## COUNTRIES ################
 #########################################
 #Import the selected countries (countries with at least 1000 immig studs within the study)
-#setwd("../txt - files/European countries raw")
+setwd("../txt - files/European countries raw")
 
 ITA= read.table(file = "italy.txt", header = T)
 AUT= read.table(file = "austria.txt", header = T)
@@ -18,7 +18,13 @@ BEL= read.table(file = "belgium.txt", header = T)
 DNK= read.table(file = "denmark.txt", header = T)
 DEU= read.table(file = "germany.txt", header = T)
 LUX= read.table(file = "luxembourg.txt", header = T)
-ESP= read.table(file = "spain.txt", header = T)
+
+ESP1= read.table(file = "spain1.txt", header = T) #spain is divided in three files because github can't handle files bigger than 100mb
+ESP2= read.table(file = "spain2.txt", header = T)
+ESP3= read.table(file = "spain3.txt", header = T)
+ESP = rbind(ESP1,ESP2,ESP3)
+rm(ESP1,ESP2,ESP3)
+
 SWE= read.table(file = "sweden.txt", header = T)
 CHE= read.table(file = "swiss.txt", header = T)
 GBR= read.table(file = "greatbrit.txt", header = T)
