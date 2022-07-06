@@ -6,12 +6,9 @@ library(labstatR)
 #install.packages("naniar")
 #library(naniar)
 
-#########################################
-############## COUNTRIES ################
-#########################################
-#Import the selected countries (countries with at least 1000 immig studs within the study)
-setwd("../txt - files/European countries raw")
 
+#Import the selected countries (countries with at least 1000 immig studs within the study)
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/European countries raw")
 ITA= read.table(file = "italy.txt", header = T)
 AUT= read.table(file = "austria.txt", header = T)
 BEL= read.table(file = "belgium.txt", header = T)
@@ -29,11 +26,6 @@ SWE= read.table(file = "sweden.txt", header = T)
 CHE= read.table(file = "swiss.txt", header = T)
 GBR= read.table(file = "greatbrit.txt", header = T)
 
-
-########################################
-######## Extracting variables ##########
-######################################## 
-
 #List of countries to iterate through
 countries = list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR)
 
@@ -43,8 +35,10 @@ name_files = c('student_ita.txt', 'student_aut.txt', 'student_bel.txt', 'student
                'student_swe.txt', 'student_che.txt', 'student_gbr.txt')
 n_countries = length(countries) 
 
+#Variable selection
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_features_new")
 for (i in 1:n_countries) {
-  # Categorical variables
+  # Categorical variables:
   # school ID
   school_id = as.character(countries[[i]]$CNTSCHID)
   # Gender (male=1, female=0)
@@ -74,11 +68,19 @@ for (i in 1:n_countries) {
                        ESCS_status = countries[[i]]$ESCS, #Index of economic, social and cultural status
                        teacher_support = countries[[i]]$TEACHSUP, #Teacher support in test language lessons
                        emo_sup = countries[[i]]$EMOSUPS, #Parents' emotional support perceived by student
+                       
+                       #aware_int_com = countries[[i]]$AWACOM, #awareness of intercultural communication
+                       #respect = countries[[i]]$RESPECT, #respect for people from other cultures
+                       school_changes = countries[[i]]$SCCHANGE, #respect for people from other cultures
+                       learn_time_math = countries[[i]]$MMINS, #minutes per week studying math
+                       learn_time_read = countries[[i]]$LMINS, #minutes per week studying test language
+                       learn_time_scie = countries[[i]]$SMINS, #minutes per week studying science
+                       
                        math = countries[[i]]$PV3MATH, 
                        read = countries[[i]]$PV3READ,
                        scie = countries[[i]]$PV3SCIE)
   
-  write.table(student, file=name_files[i])
+  #write.table(student, file=name_files[i])
   
 }
 
@@ -96,41 +98,52 @@ GBR= read.table(file = "student_gbr.txt", header = T)
 
 countries = list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR)
 
-#in order to see the number of NA
-#apply(X = is.na(student), MARGIN = 2, FUN = sum)
+#in order to see the number of NA: apply(X = is.na(student), MARGIN = 2, FUN = sum)
 library(visdat)
-for (i in 1:10){
+for (i in 1:n_countries){
   #x11()
   #vis_miss(countries[[i]])
   print(name_countries[i])
   print(names(countries[[i]])[which(apply(X=is.na(countries[[i]]),MARGIN=2,FUN=sum)>0.8*dim(countries[[i]])[1])])
 }
 
-#Missing features before:
-# [1] "ITA"
-# character(0)
-# [1] "AUT"
-# [1] "morning_study"   "afternoon_study"
-# [1] "BEL"
-# [1] "immig_att"
-# [1] "DNK"
-# [1] "immig_att"
-# [1] "DEU"
-# [1] "morning_study"   "afternoon_study"
-# [1] "LUX"
-# [1] "morning_study"   "afternoon_study" "immig_att"      
-# [1] "ESP"
-# character(0)
-# [1] "SWE"
-# [1] "morning_study"   "afternoon_study" "immig_att"      
-# [1] "CHE"
-# [1] "morning_study"   "afternoon_study"
-# [1] "GBR"
-# [1] "immig_att"
+#Missing features for each country:
+#  "ITA"
+#  no feature largely missing
+#  "AUT"
+#  "morning_study"   "afternoon_study" "school_changes"
+#  "BEL"
+#  "immig_att" "aware_int_com" "respect"
+#  "DNK"
+#  "immig_att" "aware_int_com" "respect"
+#  "DEU"
+#  "morning_study"   "afternoon_study"
+#  "LUX"
+#  "morning_study"   "afternoon_study" "immig_att" "aware_int_com"  "respect"        "school_changes"     
+#  "ESP"
+#  no feature largely missing
+#  "SWE"
+#  "morning_study"   "afternoon_study" "immig_att" "aware_int_com"  "respect"        "school_changes"     
+#  "CHE"
+#  "morning_study"   "afternoon_study" "school_changes"  
+#  "GBR"
+#  "immig_att" "aware_int_com" "respect"  
 
-#removed because too many NA: countries[[i]]$EMOSUPP,  countries[[i]]$DISCRIM, stratum, ITA$WB032Q01NA, ITA$WB031Q01NA, ITA$SWBP, ITA$WB154Q04HA, ITA$WB154Q05HA,
-#ITA$WB154Q06HA, ITA$WB154Q07HA, ITA$WB154Q08HA, ITA$WB154Q09HA
-#possibile to add: countries[[i]]$COBN_M, countries[[i]]$COBN_F, countries[[i]]$COBN_S
+#other features removed because too many NA: 
+# countries[[i]]$EMOSUPP,  countries[[i]]$DISCRIM, stratum, ITA$WB032Q01NA, ITA$WB031Q01NA, ITA$SWBP, ITA$WB154Q04HA, ITA$WB154Q05HA,
+# ITA$WB154Q06HA, ITA$WB154Q07HA, ITA$WB154Q08HA, ITA$WB154Q09HA
+# possibile to add: countries[[i]]$COBN_M, countries[[i]]$COBN_F, countries[[i]]$COBN_S
+
+#remove NA and re-save the datasets
+for (i in 1:n_countries){
+  dim1 <- dim(countries[[i]])[1]
+  miss_feat <- which(apply(X=is.na(countries[[i]]),MARGIN=2,FUN=sum)>0.8*dim1)
+  if (length(miss_feat)>0)
+    countries[[i]]<-countries[[i]][-miss_feat]
+  print(name_countries[i])
+  print(dim(countries[[i]])[2])#write.table(countries[[i]], file=name_files[i])
+  #write.table(countries[[i]], file=name_files[i])
+}
 
 
 #PCA for each feature category (UNSUCCESFUL UP TO NOW)
