@@ -7,7 +7,7 @@ library(labstatR)
 #library(naniar)
 
 
-#Import the selected countries (countries with at least 1000 immig studs within the study)
+#Import the students data of selected countries
 setwd("~/GitHub/Applied-Statistics-Project/txt - files/European countries raw")
 ITA= read.table(file = "italy.txt", header = T)
 AUT= read.table(file = "austria.txt", header = T)
@@ -35,8 +35,23 @@ name_files = c('student_ita.txt', 'student_aut.txt', 'student_bel.txt', 'student
                'student_swe.txt', 'student_che.txt', 'student_gbr.txt')
 n_countries = length(countries) 
 
+#Import school data
+library(haven)
+school <- read_sas("C:/Users/sebas/OneDrive/Desktop/Poli 2021-2022/Applied Statistics/Project/SCH/cy07_msu_sch_qqq.sas7bdat")
+
+#Create school data.frame (then we will merge it with student data in the loop below)
+school_features <- data.frame(school_id = as.character(school$CNTSCHID),
+                    class_size = school$CLSIZE, 
+                    stud_teach_ratio = school$STRATIO,
+                    short_edu_mat = school$EDUSHORT, #shortage of education material (WLE)
+                    short_edu_staff = school$STAFFSHORT, #shortage in staff (WLE)
+                    stu_behav = school$STUBEHA, #student behavior hindering learning (WLE)
+                    teach_behav = school$TEACHBEHA, #teacher behavior hindering learning (WLE)
+                    teach_multicult = school$SCMCEG #School principal's view on teachers' multicultural and egalitarian beliefs (WLE)
+                    )
+
 #Variable selection
-setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_features_new")
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 for (i in 1:n_countries) {
   # Categorical variables:
   # school ID
@@ -69,8 +84,6 @@ for (i in 1:n_countries) {
                        teacher_support = countries[[i]]$TEACHSUP, #Teacher support in test language lessons
                        emo_sup = countries[[i]]$EMOSUPS, #Parents' emotional support perceived by student
                        
-                       #aware_int_com = countries[[i]]$AWACOM, #awareness of intercultural communication
-                       #respect = countries[[i]]$RESPECT, #respect for people from other cultures
                        school_changes = countries[[i]]$SCCHANGE, #respect for people from other cultures
                        learn_time_math = countries[[i]]$MMINS, #minutes per week studying math
                        learn_time_read = countries[[i]]$LMINS, #minutes per week studying test language
@@ -80,11 +93,14 @@ for (i in 1:n_countries) {
                        read = countries[[i]]$PV3READ,
                        scie = countries[[i]]$PV3SCIE)
   
-  #write.table(student, file=name_files[i])
+  student <- merge(student,school_features,by="school_id")
+  
+  #write.table(student, file=name_files[i]) # commented because already done
   
 }
 
 #Check that all countries have enough values for each feature
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 ITA= read.table(file = "student_ita.txt", header = T)
 AUT= read.table(file = "student_aut.txt", header = T)
 BEL= read.table(file = "student_bel.txt", header = T)
@@ -111,23 +127,23 @@ for (i in 1:n_countries){
 #  "ITA"
 #  no feature largely missing
 #  "AUT"
-#  "morning_study"   "afternoon_study" "school_changes"
+#  "morning_study"   "afternoon_study" "school_changes" "stud_teach_ratio" "teach_multicult"
 #  "BEL"
-#  "immig_att" "aware_int_com" "respect"
+#  "immig_att" "aware_int_com" "respect" "teach_multicult"
 #  "DNK"
-#  "immig_att" "aware_int_com" "respect"
+#  "immig_att" "aware_int_com" "respect" "teach_multicult"
 #  "DEU"
 #  "morning_study"   "afternoon_study"
 #  "LUX"
-#  "morning_study"   "afternoon_study" "immig_att" "aware_int_com"  "respect"        "school_changes"     
+#  "morning_study"   "afternoon_study" "immig_att" "aware_int_com"  "respect" "school_changes"  "teach_multicult"     
 #  "ESP"
 #  no feature largely missing
 #  "SWE"
-#  "morning_study"   "afternoon_study" "immig_att" "aware_int_com"  "respect"        "school_changes"     
+#  "morning_study"   "afternoon_study" "immig_att" "aware_int_com"  "respect"  "school_changes"  ""teach_multicult" "class_size"  
 #  "CHE"
 #  "morning_study"   "afternoon_study" "school_changes"  
 #  "GBR"
-#  "immig_att" "aware_int_com" "respect"  
+#  "immig_att" "aware_int_com" "respect"  "teach_multicult"
 
 #other features removed because too many NA: 
 # countries[[i]]$EMOSUPP,  countries[[i]]$DISCRIM, stratum, ITA$WB032Q01NA, ITA$WB031Q01NA, ITA$SWBP, ITA$WB154Q04HA, ITA$WB154Q05HA,
@@ -142,138 +158,7 @@ for (i in 1:n_countries){
     countries[[i]]<-countries[[i]][-miss_feat]
   print(name_countries[i])
   print(dim(countries[[i]])[2])#write.table(countries[[i]], file=name_files[i])
-  #write.table(countries[[i]], file=name_files[i])
+  #write.table(countries[[i]], file=name_files[i]) # commented because already done
 }
-
-
-#PCA for each feature category (UNSUCCESFUL UP TO NOW)
-
-## Wealth features
-student_wealth_features = data.frame(ITA$HOMEPOS,ITA$WEALTH,ITA$CULTPOSS,ITA$HEDRES,ITA$ICTRES,ITA$ESCS) #ITA$ICTHOME in boxplot è troppo diversa dalle altre
-student_wealth_features = na.omit(student_wealth_features) #bene, ci sono quas tutti i dati
-boxplot(student_wealth_features, las=2, col='gold') #ok, non standardizzo
-sw = princomp(student_wealth_features)
-summary(sw)
-
-plot(cumsum(sw$sde^2)/sum(sw$sde^2), type='b', axes=F, xlab='Number of components', ylab='Contribution to the total variance', ylim=c(0,1))
-abline(h=1, col='blue')
-abline(h=0.8, lty=2, col='blue')
-box()
-axis(2,at=0:10/10,labels=0:10/10)
-axis(1,at=1:ncol(student_wealth_features),labels=1:ncol(student_wealth_features),las=2)
-
-sw$loadings #prima pc spiega il 60% ed è una media di tutte le var, con la seconda pc arriviamo a 70% ed è un confronto tra hedres e altre var
-par(mar = c(2,2,2,1), mfrow=c(3,1))
-for(i in 1:3)barplot(sw$loadings[,i], ylim = c(-1, 1), main=paste('Loadings PC ',i,sep=''))
-
-student_wealth = sw$scores[,1] #prendo solo il primo
-
-## Parents Education features
-parents_edu_features = data.frame(ITA$HISCED, ITA$FISCED, ITA$MISCED)
-parents_edu_features = na.omit(parents_edu_features)
-boxplot(parents_edu_features, las=2, col='gold')
-pe = princomp(parents_edu_features)
-summary(pe) #già 80% con prima pc, che è esattamente media dei tre
-par(mar = c(2,2,2,1), mfrow=c(3,1))
-for(i in 1:3)barplot(pe$loadings[,i], ylim = c(-1, 1), main=paste('Loadings PC ',i,sep=''))
-
-parents_education = pe$scores[,1]
-
-                ## Open Minded Parents features
-                open_mindp_features = data.frame(ITA$GCAWAREP,ITA$INTCULTP, ITA$JOYREADP) #ITA$ATTIMP
-                open_mindp_features = na.omit(open_mindp_features) #molti na, controllo altri paesi
-                #apply(X = is.na(open_mindp_features), MARGIN = 2, FUN = sum)
-                boxplot(open_mindp_features, las=2, col = 'gold')
-                
-                omp = princomp(open_mindp_features)
-                summary(omp) #56% con 1 (media), 80% con 2
-                par(mar = c(2,2,2,1), mfrow=c(3,1))
-                for(i in 1:3)barplot(omp$loadings[,i], ylim = c(-1, 1), main=paste('Loadings PC ',i,sep=''))
-                
-                open_mind = omp$scores[,1]
-                
-                ## Open Minded Student features
-                open_minds_features = data.frame(ITA$GLOBMIND,ITA$AWACOM,ITA$ATTIMM,
-                                                ITA$RESPECT,ITA$COGFLEX,ITA$PERSPECT,ITA$INTCULT,ITA$GCAWARE,ITA$GCSELFEFF)
-                open_minds_features = na.omit(open_minds_features) #molti na, controllo altri paesi
-                #apply(X = is.na(open_minds_features), MARGIN = 2, FUN = sum)
-                boxplot(open_minds_features, las=2, col = 'gold')
-                
-                oms = princomp(open_minds_features)
-                summary(oms) #60% con 3, 80% con 6
-                par(mar = c(2,2,2,1), mfrow=c(3,1))
-                for(i in 1:3)barplot(oms$loadings[,i], ylim = c(-1, 1), main=paste('Loadings PC ',i,sep=''))
-                
-                open_mind = om$scores[,1]#capisco cosa prendere
-
-##School Environment features
-school_envir_features = data.frame(ITA$PERCOMP, ITA$PERCOOP, ITA$BELONG, ITA$TEACHINT, ITA$TEACHSUP)
-school_envir_features = na.omit(school_envir_features)
-boxplot(school_envir_features, las=2, col='gold')
-se = princomp(school_envir_features)
-summary(se)
-par(mar = c(2,2,2,1), mfrow=c(3,1))
-for(i in 1:3)barplot(se$loadings[,i], ylim = c(-1, 1), main=paste('Loadings PC ',i,sep=''))
-
-parents_education = se$scores[,1]
-                
-                
-## Soft skills features
-soft_skills_features = data.frame(ITA$RESILIENCE,ITA$WORKMAST, ITA$COMPETE, ITA$ATTLNACT, ITA$METASPAM, ITA$METASUM, ITA$UNDREM)
-apply(X = is.na(soft_skills_features), MARGIN = 2, FUN = sum)
-soft_skills_features = na.omit(soft_skills_features)
-sk = princomp(soft_skills_features)
-summary(sk)#60% con 3
-par(mar = c(2,2,2,1), mfrow=c(3,1))
-for(i in 1:3)barplot(sk$loadings[,i], ylim = c(-1, 1), main=paste('Loadings PC ',i,sep=''))
-
-soft_skills = sk$scores[,c(1,2,3)]
-
-
-##Negative Feelings features
-negative_feelings_features = data.frame(ITA$BEINGBULLIED,ITA$GFOFAIL)
-#apply(X = is.na(negative_feelings_features), MARGIN = 2, FUN = sum)
-negative_feelings_features = na.omit(negative_feelings_features)
-nf = princomp(negative_feelings_features)
-summary(nf)#56% con 1
-par(mar = c(2,2,2,1), mfrow=c(2,1))
-for(i in 1:3)barplot(nf$loadings[,i], ylim = c(-1, 1), main=paste('Loadings PC ',i,sep=''))
-
-negative_feelings = nf$scores[,1]
-
-#Positive Feelings
-ITA$EUDMO
-
-
-
-
-
-
-#SEBA
-
-## Wealth features
-student_wealth_features = data.frame(ITA$HOMEPOS,ITA$WEALTH)
-sw = princomp(na.omit(student_wealth_features))
-summary(sw)
-sw$loadings
-student_wealth = sw$scores[,1]
-
-## Emotional features
-student_emotion_features = data.frame(ITA$COMPETE,ITA$GFOFAIL,ITA$RESILIENCE,ITA$BELONG,
-                                      ITA$BEINGBULLIED)
-se = princomp(na.omit(student_emotion_features))
-summary(se)
-se$loadings
-student_emotion = se$scores[,c(1,2,3,4)]
-
-#Home and Family features
-student_homefamily_features = data.frame(ITA$MISCED,ITA$FISCED,ITA$HISCED,ITA$CULTPOSS,ITA$HEDRES,ITA$EMOSUPP,
-                                         ITA$INTCULTP,ITA$ESCS) 
-shf = princomp(na.omit(student_homefamily_features))
-summary(shf)
-shf$loadings
-student_homefamily = shf$scores[,c(1,2,3,4,5)]
-
-#Immigration
 
 
