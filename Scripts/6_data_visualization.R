@@ -1,12 +1,8 @@
-############################################
-########### DATA VISUALIZATION #############
-############################################
-
-# Countries: Italy, Austria, Belgium, Denmark, Germany, Luxembourg, Spain, Sweden, Swiss, Greatbrit
-
-## ITALY ##
+# Script to visualize data. Used for the in class presentation.
+# Focus on Italy
 
 # Load data-frame
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 ita = read.table(file = "student_ita.txt", header = T)
 n_cols = dim(ita)[2]
 

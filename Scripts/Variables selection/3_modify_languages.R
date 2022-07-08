@@ -1,8 +1,9 @@
 # Script to translate languages from id codes to categories (with respect to the belonging country): 
-#0=native language; 1=dialect; 2=foreign language; 3=other
+#0=country language; 1=dialect; 2=foreign language; 3=other
 
 #Import datasets
-ITA= read.table(file = "student_SWE.txt", header = T)
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
+ITA= read.table(file = "student_ita.txt", header = T)
 AUT= read.table(file = "student_aut.txt", header = T)
 BEL= read.table(file = "student_bel.txt", header = T)
 DNK= read.table(file = "student_dnk.txt", header = T)
@@ -90,5 +91,4 @@ n_countries = length(countries)
 
 for (i in 1:n_countries) {
   write.table(countries[[i]], file=name_files[i])
-  
 }

@@ -69,11 +69,11 @@ for (i in 1:n_countries) {
                        language = countries[[i]]$LANGN, #language spoken at home
                        hisced = countries[[i]]$HISCED,  #highest education of parent
                        grade_rep = grade_rep, 
-                       joy_read = countries[[i]]$JOYREAD, 
-                       pisa_difficulty = countries[[i]]$PISADIFF, #perception of difficulty of the pisa test
-                       competitiveness = countries[[i]]$COMPETE,
+                       # joy_read = countries[[i]]$JOYREAD, 
+                       # pisa_difficulty = countries[[i]]$PISADIFF, #perception of difficulty of the pisa test
+                       # competitiveness = countries[[i]]$COMPETE,
                        fear_failure = countries[[i]]$GFOFAIL, 
-                       resilience = countries[[i]]$RESILIENCE, 
+                       # resilience = countries[[i]]$RESILIENCE, 
                        belonging = countries[[i]]$BELONG, #sense of belonging in school
                        bullied = countries[[i]]$BEINGBULLIED,
                        home_poss = countries[[i]]$HOMEPOS, 
@@ -95,7 +95,7 @@ for (i in 1:n_countries) {
   
   student <- merge(student,school_features,by="school_id")
   
-  #write.table(student, file=name_files[i]) # commented because already done
+  write.table(student, file=name_files[i]) # commented because already done
   
 }
 
@@ -150,7 +150,7 @@ for (i in 1:n_countries){
 # ITA$WB154Q06HA, ITA$WB154Q07HA, ITA$WB154Q08HA, ITA$WB154Q09HA
 # possibile to add: countries[[i]]$COBN_M, countries[[i]]$COBN_F, countries[[i]]$COBN_S
 
-#remove NA and re-save the datasets
+#remove columns with too many NA and re-save the datasets
 for (i in 1:n_countries){
   dim1 <- dim(countries[[i]])[1]
   miss_feat <- which(apply(X=is.na(countries[[i]]),MARGIN=2,FUN=sum)>0.8*dim1)
@@ -158,7 +158,7 @@ for (i in 1:n_countries){
     countries[[i]]<-countries[[i]][-miss_feat]
   print(name_countries[i])
   print(dim(countries[[i]])[2])#write.table(countries[[i]], file=name_files[i])
-  #write.table(countries[[i]], file=name_files[i]) # commented because already done
+  write.table(na.omit(countries[[i]]), file=name_files[i]) # commented because already done
 }
 
 

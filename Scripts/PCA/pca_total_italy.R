@@ -10,6 +10,7 @@ n <- dim(stud_ita)[1]
 p <- dim(stud_ita)[2]
 
 x11()
+par(mar=c(8,3,3,3))
 boxplot(stud_ita, las=2, col='gold')
 
 stud_ita.sd <- scale(stud_ita)
@@ -18,13 +19,10 @@ stud_ita.sd <- data.frame(stud_ita.sd)
 head(stud_ita.sd)
 
 x11()
-par(mar=rep(8,4))
-boxplot(stud_ita.sd, las=2, col='gold')
-
-stud_ita.sd <- na.omit(stud_ita.sd)
+par(mar=c(8,3,3,3))
+boxplot(stud_ita.sd, las=2, col='gold',main="Scaled dataset")
 
 pc.stud_ita <- princomp(stud_ita.sd, scores=T)
-pc.stud_ita
 summary(pc.stud_ita)
 
 
