@@ -28,9 +28,7 @@ GBR= read.table(file = "greatbrit.txt", header = T)
 
 #List of countries to iterate through
 countries = list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR)
-
-#List of names of countries
-name_countries = c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR")
+name_countries = c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR") #List of names of countries
 name_files = c('student_ita.txt', 'student_aut.txt', 'student_bel.txt', 'student_dnk.txt', 'student_deu.txt', 'student_lux.txt', 'student_esp.txt',
                'student_swe.txt', 'student_che.txt', 'student_gbr.txt')
 n_countries = length(countries) 
@@ -161,4 +159,20 @@ for (i in 1:n_countries){
   write.table(na.omit(countries[[i]]), file=name_files[i]) # commented because already done
 }
 
+# Create collective dataset
+countries = list(AUT, BEL, CHE, DEU, DNK,  ESP, GBR, ITA, LUX, SWE) 
+name_countries = c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE")
+n_countries = length(countries) 
+EUR <- NULL
+library(plyr)
 
+for (i in 1:n_countries){
+  curr_country <- countries[[i]]
+  dim_curr <- dim(curr_country)[1]
+  country_var <- rep(name_countries[[i]],dim_curr)
+  curr_country$country <- country_var
+  EUR <- rbind.fill(EUR,curr_country)
+}
+miss_feat <- which(apply(X=is.na(EUR),MARGIN=2,FUN=sum)>0)
+EUR <- EUR[-miss_feat]
+write.table(EUR,file="student_eur.txt")            

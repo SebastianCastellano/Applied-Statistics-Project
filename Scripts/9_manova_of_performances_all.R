@@ -2,6 +2,7 @@ library(mvnormtest)
 load('mcshapiro.test.RData')
 
 #Import datasets
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 AUT <- read.table(file = "student_aut.txt", header = T)
 BEL <- read.table(file = "student_bel.txt", header = T)
 CHE <- read.table(file = "student_che.txt", header = T)
@@ -12,7 +13,9 @@ GBR <- read.table(file = "student_gbr.txt", header = T)
 ITA <- read.table(file = "student_ita.txt", header = T)
 LUX <- read.table(file = "student_lux.txt", header = T)
 SWE <- read.table(file = "student_swe.txt", header = T)
-EUR <- read.table(file = "student_eur.txt", header = T)
+
+library(plyr)
+EUR <- rbind.fill(AUT,BEL,CHE,DEU,DNK,ESP,GBR,ITA,LUX,SWE)
 
 countries <- list(AUT, BEL, CHE, DEU, DNK, ESP, GBR, ITA, LUX, SWE, EUR)
 name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE", "EUR")
