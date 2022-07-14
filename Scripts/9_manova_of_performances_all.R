@@ -1,5 +1,5 @@
 library(mvnormtest)
-load('mcshapiro.test.RData')
+load('~/GitHub/Applied-Statistics-Project/scripts/mcshapiro.test.RData')
 
 #Import datasets
 setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
@@ -13,15 +13,13 @@ GBR <- read.table(file = "student_gbr.txt", header = T)
 ITA <- read.table(file = "student_ita.txt", header = T)
 LUX <- read.table(file = "student_lux.txt", header = T)
 SWE <- read.table(file = "student_swe.txt", header = T)
-
-library(plyr)
-EUR <- rbind.fill(AUT,BEL,CHE,DEU,DNK,ESP,GBR,ITA,LUX,SWE)
+EUR <- read.table(file = "student_eur.txt", header = T)
 
 countries <- list(AUT, BEL, CHE, DEU, DNK, ESP, GBR, ITA, LUX, SWE, EUR)
 name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE", "EUR")
 n_countries <- length(countries) 
 
-#Manova of math, scie, read for each country
+#Manova X.values = math, scie, read, X.groups = Native, First gen imm., 2nd gen imm.
 for (i in 1:n_countries) {
   X = data.frame(countries[[i]]$math, countries[[i]]$read,  countries[[i]]$scie)
   names(X) = c("math","read", "scie")
@@ -43,9 +41,9 @@ for (i in 1:n_countries) {
   X_imm2 = X[immIndex_2,]
   
   print(name_countries[i])
-  # p_native = mcshapiro.test(X_native[sample(min(300,n_native)),])$p
-  # p_imm1 = mcshapiro.test(X_imm1)$p
-  # p_imm2 = mcshapiro.test(X_imm2)$p
+  # mcshapiro.test(X_native[sample(min(500,n_native)),])$p
+  # mcshapiro.test(X_imm1)$p
+  # mcshapiro.test(X_imm2)$p
   # 
   # if(p_native<0.05 || p_imm1<0.05 || p_imm2<0.05)
   #   print("normality not guarenteed")

@@ -1,8 +1,9 @@
 library(mvnormtest)
 library(MASS)
-load('mcshapiro.test.RData')
+load('~/GitHub/Applied-Statistics-Project/scripts/mcshapiro.test.RData')
 
 #Import datasets
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 ITA <- read.table(file = "student_ita.txt", header = T)
 AUT <- read.table(file = "student_aut.txt", header = T)
 BEL <- read.table(file = "student_bel.txt", header = T)
@@ -16,8 +17,8 @@ GBR <- read.table(file = "student_gbr.txt", header = T)
 EUR <- read.table(file = "student_eur.txt", header = T)
 
 
-countries <- list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR, EUR)
-name_countries <- c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR", "EUR")
+countries <- list(AUT, BEL, CHE, DEU, DNK, ESP, GBR, ITA, LUX, SWE, EUR)
+name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE", "EUR")
 n_countries <- length(countries) 
 
 variables <- c("CULTURAL POSSESSIONS", "FAMILY WEALTH", "ESCS STATUS", 
@@ -26,7 +27,6 @@ variables <- c("CULTURAL POSSESSIONS", "FAMILY WEALTH", "ESCS STATUS",
 m_scores <- rep(0, n_countries)
 s_scores <- rep(0, n_countries)
 r_scores <- rep(0, n_countries)
-
 
 for (i in 1:n_countries) {
   
@@ -208,9 +208,9 @@ par(mfrow = c(3,1))
 barplot(sort(m_scores), names.arg = m_rank, xlab ="Countries",
         ylab = "Native vs IMM", main = "MATH", col = "red")
 barplot(sort(s_scores), names.arg = s_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "SCIENCE", col = "blue")
+        ylab = "Native vs IMM", main = "SCIENCE", col = "green2")
 barplot(sort(r_scores), names.arg = r_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "READING", col = "green")
+        ylab = "Native vs IMM", main = "READING", col = "blue")
 
 
 ## GRAPH WAS SAVED AS : barplot_performances_countries
