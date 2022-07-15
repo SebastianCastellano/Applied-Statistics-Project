@@ -38,8 +38,14 @@ fm1b <- lm(math ~ immigration + hisced + ESCS_status)
 summary(fm1b)
 # R^2 rimane molto basso
 
+fm1_int <- lm(math ~ immigration + language + hisced + ESCS_status + immigration:ESCS_status)
+summary(fm1_int)
+
 fm1 <- lm(math ~ immigration + ESCS_status + family_wealth + cult_poss + home_poss)
 summary(fm1)
+
+fm1_int <- lm(math ~ immigration + ESCS_status + family_wealth + cult_poss + home_poss + immigration:ESCS_status)
+summary(fm1_int)
 
 fm1 <- lm(math ~ immigration + ESCS_status + competitiveness)
 summary(fm1)
