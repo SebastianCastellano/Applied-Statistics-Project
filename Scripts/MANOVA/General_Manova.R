@@ -47,7 +47,7 @@ summary(man)  #all significant
 summary.aov(man) 
 
 
-# Who cares about hypothesis? ----
+# Who cares about hypothesis? ---- lol who wrote this? -S
 # #Check assumptions: Gaussianity and same covariance structure
 # #Gaussianity (residuals analysis)
 # man.res <- man$residuals

@@ -1,0 +1,8 @@
+For each subject (math, science, read) there are three plots.
+The logic is the same for each subject so we will use math for example.
+1) Math ranking - All studs, contains the countries' ranking based on the
+   mean score in math obtained by considering all students of the relative country
+2) Math ranking - Immig studs, contains the countries' ranking based on the 
+   mean score in math obtained by considering all immig students (1st gen and 2nd gen) of the relative country
+3) Math ranking - all studs - After ANOVA, aggregates the countries for which an anova doesn't reject the
+   null hypothesis of them having the same mean. The mean plotted is the math mean of the aggregated countries.

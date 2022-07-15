@@ -15,7 +15,6 @@ CHE <- read.table(file = "student_che.txt", header = T)
 GBR <- read.table(file = "student_gbr.txt", header = T)
 EUR <- read.table(file = "student_eur.txt", header = T)
 
-
 countries <- list(AUT, BEL, CHE, DEU, DNK, ESP, GBR, ITA, LUX, SWE, EUR)
 name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE", "EUR")
 n_countries <- length(countries) 
