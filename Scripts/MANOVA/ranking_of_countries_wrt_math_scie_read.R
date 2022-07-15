@@ -145,7 +145,7 @@ nameOrder_read_updated[2] <- "ITA,CHE,ESP"
 nameOrder_read_updated[3] <- "AUT,DEN"
 nameOrder_read_updated[5] <- "SWE,GBR,DEU"
 x11()
-par(mar=c(10,4,4,2))
+par(mar=c(4,4,4,2))
 barplot(round(meanOrder_read_updated), names.arg = nameOrder_read_updated, xlab = 'Countries', 
-        ylab = 'Mean Reading Score', ylim = c(0,600), main = 'Reading Ranking - All Students - After ANOVA', col = 'green3',
-        las=1)
+        ylab = 'Mean Reading Score', ylim = c(0,600), main = 'Reading Ranking - All Students - After ANOVA', col = 'blue',
+        las=1, cex.names=0.9)

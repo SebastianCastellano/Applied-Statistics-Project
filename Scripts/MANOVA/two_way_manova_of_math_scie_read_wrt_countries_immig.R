@@ -16,10 +16,8 @@ CHE <- read.table(file = "student_che.txt", header = T)
 GBR <- read.table(file = "student_gbr.txt", header = T)
 EUR <- read.table(file = "student_eur.txt", header = T)
 
-
 name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE")
 n_countries <- length(name_countries) 
-
 
 #a) Two-way Manova on math, science, reading scores. group1=immigration status, group2=country
 X <- EUR

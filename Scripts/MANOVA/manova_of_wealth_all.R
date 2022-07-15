@@ -1,23 +1,23 @@
 library(mvnormtest)
 library(MASS)
-load('mcshapiro.test.RData')
+load('~/GitHub/Applied-Statistics-Project/scripts/mcshapiro.test.RData')
 
 #Import datasets
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 ITA <- read.table(file = "student_ita.txt", header = T)
 AUT <- read.table(file = "student_aut.txt", header = T)
 BEL <- read.table(file = "student_bel.txt", header = T)
 DNK <- read.table(file = "student_dnk.txt", header = T)
 DEU <- read.table(file = "student_deu.txt", header = T)
-LUX <-read.table(file = "student_lux.txt", header = T)
+LUX <- read.table(file = "student_lux.txt", header = T)
 ESP <- read.table(file = "student_esp.txt", header = T)
 SWE <- read.table(file = "student_swe.txt", header = T)
 CHE <- read.table(file = "student_che.txt", header = T)
 GBR <- read.table(file = "student_gbr.txt", header = T)
 EUR <- read.table(file = "student_eur.txt", header = T)
 
-
-countries <- list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR, EUR)
-name_countries <- c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR", "EUR")
+countries <- list(AUT, BEL, CHE, DEU, DNK, ESP, GBR, ITA, LUX, SWE, EUR)
+name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE", "EUR")
 n_countries <- length(countries) 
 
 variables <- c("CULTURAL POSSESSIONS", "FAMILY WEALTH", "ESCS STATUS", 
@@ -256,15 +256,15 @@ hp_rank = name_countries[hp_order]
 x11(width = 18, height = 15)
 par(mfrow = c(3,2))
 barplot(sort(cp_scores), names.arg = cp_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "CULTURAL POSSESSIONS", col = "red")
+        ylab = "Native vs IMM", main = "CULTURAL POSSESSIONS", col = "red", cex.names = 0.9)
 barplot(sort(fw_scores), names.arg = fw_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "FAMILY WEALTH", col = "blue")
+        ylab = "Native vs IMM", main = "FAMILY WEALTH", col = "blue", cex.names = 0.9)
 barplot(sort(es_scores), names.arg = es_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "ESCS STATUS", col = "green")
+        ylab = "Native vs IMM", main = "ESCS STATUS", col = "green", cex.names = 0.9)
 barplot(sort(er_scores), names.arg = er_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "EDUCATIONAL RESOURCES", col = "gold")
+        ylab = "Native vs IMM", main = "EDUCATIONAL RESOURCES", col = "gold", cex.names = 0.9)
 barplot(sort(hp_scores), names.arg = hp_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "HOME POSSESSIONS", col = "pink")
+        ylab = "Native vs IMM", main = "HOME POSSESSIONS", col = "pink", cex.names = 0.9)
 
 ## GRAPH WAS SAVED AS : barplot_wealth_countries
 
