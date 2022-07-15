@@ -29,170 +29,108 @@ attach(studentsData)
 
 ## Modello per MATH con tutte le variabili riferite allo studente
 
-gm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+gm1 <- lm(math ~ gender + immigration + as.factor(language) + hisced + grade_rep + fear_failure + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_math + immigration:gender + immigration:language + immigration:hisced + 
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
             + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
             + immigration:home_poss + immigration:cult_poss + immigration:edu_resources + immigration:family_wealth + 
             + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
             + immigration:learn_time_math)
 summary(gm1)
-x11()
-par(mfrow=c(2,2))
-plot(gm1)
-# ok
 
-# Tolgo immigration:learn_time_math , immigration:cult_poss , immigration:grade_rep , fear_failure
-gm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belonging + bullied + 
+# Tolgo immigration:learn_time_math
+gm1 <- lm(math ~ gender + immigration + as.factor(language) + hisced + grade_rep + fear_failure + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_math + immigration:gender + immigration:language + immigration:hisced + 
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:cult_poss + immigration:edu_resources + immigration:family_wealth + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes)
+summary(gm1)
+
+# Tolgo immigration:grade_rep 
+gm1 <- lm(math ~ gender + immigration + as.factor(language) + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:cult_poss + immigration:edu_resources + immigration:family_wealth + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes)
+summary(gm1)
+
+# Tolgo immigration:cult_poss 
+gm1 <- lm(math ~ gender + immigration + as.factor(language) + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
             + immigration:fear_failure + immigration:belonging + immigration:bullied + 
             + immigration:home_poss + immigration:edu_resources + immigration:family_wealth + 
             + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes)
 summary(gm1)
-x11()
-par(mfrow=c(2,2))
-plot(gm1)
-# ok
 
-# Tolgo tutte le interazioni di immigration tranne quelle con ESCS_status: immigration:gender + immigration:language + immigration:hisced + 
-# + immigration:fear_failure + immigration:belonging + immigration:bullied + immigration:home_poss + immigration:edu_resources + 
-# + immigration:family_wealth + immigration:teacher_support + immigration:emo_sup + immigration:school_changes)
-gm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belonging + bullied + 
+# Tolgo fear_failure
+gm1 <- lm(math ~ gender + immigration + as.factor(language) + hisced + grade_rep + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_math + immigration:ESCS_status)
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:edu_resources + immigration:family_wealth + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes)
 summary(gm1)
-x11()
-par(mfrow=c(2,2))
-plot(gm1)
-# ok
 
-# Tolgo la variabile emo_sup che è poco significativa 
-gm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belonging + bullied + 
-            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + 
-            + school_changes + learn_time_math + immigration:ESCS_status)
+# Tolgo immigration:emo_sup 
+gm1 <- lm(math ~ gender + immigration + as.factor(language) + hisced + grade_rep + belonging + bullied + 
+            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:edu_resources + immigration:family_wealth + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes)
 summary(gm1)
-x11()
-par(mfrow=c(2,2))
-plot(gm1)
-# ok
-# Non possiamo fare lo shapiro test perchè i residui sono troppi
-# shapiro.test(residuals(gm1))
 
-gm1$coefficients
-
-#-------------------------------------------------------------------------------
-
-## Modello per MATH con tutte tutte le variabili (anche quelle riferite alla scuola)
-
-gm2 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+# Tolgo as.factor(language)
+gm1 <- lm(math ~ gender + immigration + hisced + grade_rep + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_math + class_size + stud_teach_ratio + short_edu_mat + short_edu_staff +
-            + stu_behav + teach_behav + teach_multicult + immigration:gender + immigration:language + immigration:hisced + 
-            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
-            + immigration:home_poss + immigration:cult_poss + immigration:edu_resources + immigration:family_wealth + 
-            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
-            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio + immigration:short_edu_mat +
-            + immigration:short_edu_staff + immigration:stu_behav + immigration:teach_behav + immigration:teach_multicult)
-summary(gm2)
-x11()
-par(mfrow=c(2,2))
-plot(gm2)
-# ok
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:edu_resources + immigration:family_wealth + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes)
+summary(gm1)
 
-# Tolgo alcune delle interazioni di immigration con le altre variabili: immigration:gender + immigration:language + 
-# + immigration:hisced + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
-# + immigration:home_poss + immigration:cult_poss + immigration:edu_resources + immigration:family_wealth + 
-# + immigration:teacher_support + immigration:emo_sup + immigration:learn_time_math + immigration:class_size +
-# + immigration:short_edu_staff + immigration:stu_behav + immigration:teach_behav + immigration:teach_multicult
-
-gm2 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+# Tolgo immigration:as.factor(language) 
+gm1 <- lm(math ~ gender + immigration + hisced + grade_rep + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_math + class_size + stud_teach_ratio + short_edu_mat + short_edu_staff +
-            + stu_behav + teach_behav + teach_multicult + immigration:ESCS_status + immigration:school_changes +
-            + immigration:stud_teach_ratio + immigration:short_edu_mat)
-summary(gm2)
-x11()
-par(mfrow=c(2,2))
-plot(gm2)
-# ok
+            + school_changes + learn_time_math + immigration:gender + immigration:hisced + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:edu_resources + immigration:family_wealth + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes)
+summary(gm1)
 
-# Tolgo alcune variabili poco significative: fear_failure, stud_teach_ratio
-gm2 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belonging + bullied + 
+# Tolgo immigration:family_wealth 
+gm1 <- lm(math ~ gender + immigration + hisced + grade_rep + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_math + class_size + short_edu_mat + short_edu_staff +
-            + stu_behav + teach_behav + teach_multicult + immigration:ESCS_status + immigration:school_changes +
-            + immigration:stud_teach_ratio + immigration:short_edu_mat)
-summary(gm2)
-x11()
-par(mfrow=c(2,2))
-plot(gm2)
-# ok
-# Si nota in particolare dopo quest'ultima eliminazione, che la variabile stud_teach_ratio considerata da sola 
-# non ha un effetto su voto 'math' (infatti non è significativa, con un pvalue che vale 0.491862); tuttavia 
-# se considerata come interazione con immigration è significativa
+            + school_changes + learn_time_math + immigration:gender + immigration:hisced + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:edu_resources + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes)
+summary(gm1)
 
-# Ne tolgo altre che prima avevamo un pvalue non significativo ma comunque più piccolo 
-gm2 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belonging + bullied + 
-            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + 
-            + school_changes + learn_time_math + short_edu_mat + short_edu_staff +
-            + stu_behav + teach_behav + teach_multicult + immigration:stud_teach_ratio + immigration:short_edu_mat)
-summary(gm2)
-x11()
-par(mfrow=c(2,2))
-plot(gm2)
-
-gm2 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belonging + bullied + 
-            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + 
-            + school_changes + learn_time_math + short_edu_mat + short_edu_staff +
-            + stu_behav + teach_behav + teach_multicult + immigration:stud_teach_ratio + immigration:short_edu_mat)
-summary(gm2)
-x11()
-par(mfrow=c(2,2))
-plot(gm2)
-# ok
-# Non possiamo fare lo shapiro test perchè i residui sono troppi
-# shapiro.test(residuals(gm2))
-
-gm2$coefficients
-
-#-------------------------------------------------------------------------------
-
-## Provo a ridurre ancora il modello gm2, togliendo delle variabili che sono 
-## significative ma lo sono meno di altre (hanno *), giusto per vedere come va 
-
-# Tolgo: short_edu_staff + immigration:short_edu_mat
-gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belonging + bullied + 
-            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + 
-            + school_changes + learn_time_math + short_edu_mat + 
-            + stu_behav + teach_behav + teach_multicult + immigration:stud_teach_ratio)
-summary(gm3)
-x11()
-par(mfrow=c(2,2))
-plot(gm3)
-# In realtà R^2 non aumenta, anzi diminuisce leggerissimamente, quindi non vale la pena di ridurre ancora 
-
-#-------------------------------------------------------------------------------
-
-## Modello per READ con tutte le variabili riferite allo studente
-
-gr1 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+# Tolgo immigration:hisced 
+gm1 <- lm(math ~ gender + immigration + hisced + grade_rep + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_read + immigration:gender + immigration:language + immigration:hisced + 
-            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
-            + immigration:home_poss + immigration:cult_poss + immigration:edu_resources + immigration:family_wealth + 
-            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
-            + immigration:learn_time_read)
-summary(gr1)
-x11()
-par(mfrow=c(2,2))
-plot(gr1)
-# ok
-# Non possiamo fare lo shapiro test perchè i residui sono troppi
-# shapiro.test(residuals(gs1))
+            + school_changes + learn_time_math + immigration:gender + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:edu_resources + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes)
+summary(gm1)
 
-# La variabile 'immigration' non è significativa!!!! 
-# uffi
+# Tolgo immigration:gender
+gm1 <- lm(math ~ gender + immigration + hisced + grade_rep + belonging + bullied + 
+            + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
+            + school_changes + learn_time_math + 
+            + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:home_poss + immigration:edu_resources + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes)
+summary(gm1)
+
+
+# continuareeeee
+
 
 #-------------------------------------------------------------------------------
 

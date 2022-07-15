@@ -24,14 +24,15 @@ table(studentsData$immigration)
 
 attach(studentsData)
 
+# PROVARE A RIFARE I TEST CON as.factor(language)
 
 #-------------------------------------------------------------------------------
 
 ## Modello per MATH con tutte le variabili riferite allo studente
 
-gm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+gm1 <- lm(math ~ gender + immigration + as.factor(language) + hisced + grade_rep + fear_failure + belonging + bullied + 
             + home_poss + cult_poss + edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + 
-            + school_changes + learn_time_math + immigration:gender + immigration:language + immigration:hisced + 
+            + school_changes + learn_time_math + immigration:gender + immigration:as.factor(language) + immigration:hisced + 
             + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
             + immigration:home_poss + immigration:cult_poss + immigration:edu_resources + immigration:family_wealth + 
             + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
