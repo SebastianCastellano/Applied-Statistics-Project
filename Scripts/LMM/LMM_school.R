@@ -25,7 +25,10 @@ studentsData=na.omit(studentsData)
 studentsData$immigration[which(studentsData$immigration==1)] = 0;
 studentsData$immigration[which(studentsData$immigration==2 + I(studentsData$immigration==3))] = 1;
 table(studentsData$immigration)
+studentsData$immigration= as.factor(studentsData$immigration)
+studentsData$school_id= as.factor(studentsData$school_id)
 
+#math
 x11()
 ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(school_id))) +
   geom_boxplot() +
@@ -40,9 +43,6 @@ ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(sch
 #studentsDataNative <- studentsData[which(studentsData$immigration==0),]
 #studentsDataImmigrant <- studentsData[which(studentsData$immigration==1),]
 
-#studentsData = studentsDataImmigrant #per ora considero solo gli immigrati
-
-#attach(studentsData)
 
 
 ##--------------##
@@ -58,14 +58,13 @@ lm1 = lm(math ~ immigration + ESCS_status, data = studentsData)
 summary(lm1)
 
 plot(studentsData$ESCS_status,studentsData$math, col='blue')
-#abline(9.91880,1.86976, col='green', lw=4)          # females
-#abline(9.91880 -0.68298,1.86976, col='orange', lw=4)  # males
+abline(512.555,26.387, col='green', lw=4)          # females
+abline(512.555 -23.189,26.387, col='orange', lw=4)  # males
 
 plot(lm1$residuals)
 
 boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData ID', ylab='Residuals')
-## residuals differ a lot across studentsDatas, per noi no
-
+## residuals differ a lot across schools
 
 #-----------------------------#
 # Linear Mixed Effects Models #
@@ -115,8 +114,8 @@ sigma2_b
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE
 
-# PVRE = 41.8% is very high!
-# PVRE = 0.4078496
+# masci: PVRE = 41.8% is very high!
+# PVRE = 0.3963651
 
 # Random effects: b_0i
 #----------------------------
@@ -195,47 +194,6 @@ qqnorm(unlist(ranef(lmm1)$school_id), main='Normal Q-Q Plot - Random Effects for
 qqline(unlist(ranef(lmm1)$school_id), col='red', lwd=2)
 
 
-
-# Prediction
-#-------------
-# Let's now examine standard predictions vs. cluster-specific predictions.
-# As with most R models, we can use the predict function on the model object.
-
-# Prediction from regression model
-predict_lm <- predict(lm1)
-head(predict_lm)
-
-# Prediction from mixed model:
-# 1) Without random effects ->  re.form=NA
-predict_no_re <- predict(lmm1, re.form=NA)
-head(predict_no_re) # same predictions
-# 2) With random effects
-predict_re <- predict(lmm1)     ## --> remember to allow new levels in the RE if any
-head(predict_re)
-
-## Scenario Analysis
-
-# Let's imagine to observe three new students with the same personal characteristics but enrolled in different studentsDatas,
-# two of them are observed and one is new
-
-#provo con valori ragionevoli
-new_student1 = data.frame(immigration=as.factor(1), ESCS_status=0.7, school_id=32) # observed studentsData
-new_student2 = data.frame(immigration=as.factor(1), ESCS_status=0.7, school_id=11) # observed studentsData
-new_student3= data.frame(immigration=as.factor(1), ESCS_status=0.7, school_id=53) # new studentsData
-
-predict(lmm1, new_student1, re.form=NA)
-predict(lmm1, new_student1)
-
-predict(lmm1, new_student2, re.form=NA)
-predict(lmm1, new_student2)
-
-predict(lmm1, new_student3, re.form=NA)
-predict(lmm1, new_student3, allow.new.levels = T)
-
-
-
-
-
 #--------------------------------------------------#
 # Linear Mixed Model with Random Intercept & Slope #
 #--------------------------------------------------#
@@ -285,8 +243,8 @@ sigma2_b
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE
 
-# PVRE = 56%
-#0.4153559
+#masci: PVRE = 56%
+#0.403455
 
 # Estimates of fixed and random effects
 #--------------------------------------

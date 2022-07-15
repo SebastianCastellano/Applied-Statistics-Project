@@ -17,15 +17,18 @@ library(ggplot2)
 ### COUNTRY ###
 ###############
 
-#forse sono troppo poche le countries che osserviamo
-
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 studentsData= read.table(file = "student_eur.txt", header = T)
 studentsData=na.omit(studentsData)
 
 studentsData$immigration[which(studentsData$immigration==1)] = 0;
 studentsData$immigration[which(studentsData$immigration==2 + I(studentsData$immigration==3))] = 1;
 table(studentsData$immigration)
+studentsData$immigration= as.factor(studentsData$immigration)
+studentsData$school_id= as.factor(studentsData$school_id)
+studentsData$country= as.factor(studentsData$country)
 
+#math
 x11()
 ggplot(data=studentsData, aes(x=as.factor(country), y=math, fill=as.factor(country))) +
   geom_boxplot() +
@@ -36,13 +39,21 @@ ggplot(data=studentsData, aes(x=as.factor(country), y=math, fill=as.factor(count
         plot.title = element_text(face="bold", size=rel(1.75)), legend.text = element_text(size=rel(1.15)),
         legend.position = 'none')
 
+#read
+x11()
+ggplot(data=studentsData, aes(x=as.factor(country), y=read, fill=as.factor(country))) +
+  geom_boxplot() +
+  labs(x='Country', y='Read Achievement') +
+  ggtitle('Boxplot of math achievements among countries') +
+  theme_minimal() +
+  theme(axis.text=element_text(size=rel(1.15)),axis.title=element_text(size=rel(1.5)),
+        plot.title = element_text(face="bold", size=rel(1.75)), legend.text = element_text(size=rel(1.15)),
+        legend.position = 'none')
+
 
 #studentsDataNative <- studentsData[which(studentsData$immigration==0),]
 #studentsDataImmigrant <- studentsData[which(studentsData$immigration==1),]
 
-#studentsData = studentsDataImmigrant #per ora considero solo gli immigrati
-
-#attach(studentsData)
 
 
 ##--------------##
@@ -58,19 +69,19 @@ lm1 = lm(math ~ immigration + ESCS_status, data = studentsData)
 summary(lm1)
 
 plot(studentsData$ESCS_status,studentsData$math, col='blue')
-#abline(9.91880,1.86976, col='green', lw=4)          # females
-#abline(9.91880 -0.68298,1.86976, col='orange', lw=4)  # males
+abline(512.5298,29.2562, col='green', lw=4)          # native
+abline(512.5298 -23.8581,29.2562, col='orange', lw=4)  # immigrants
 
 plot(lm1$residuals)
 
-boxplot(lm1$residuals ~ studentsData$country, col='orange', xlab='studentsData ID', ylab='Residuals')
-## residuals differ a lot across studentsDatas, per noi no
+boxplot(lm1$residuals ~ studentsData$country, col='orange', xlab='country', ylab='Residuals')
+## residuals don't differ a lot across studentsDatas
 
 
 #-----------------------------#
 # Linear Mixed Effects Models #
 #-----------------------------#
-# We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
+# We now take into account the clustering at country --> dependency among students within the same country
 
 # MODEL: achiev_ij = beta_0 + beta_1*gender_ij + beta_2*ESCS_status_ij + b_i + eps_ij
 # eps_ij ~ N(0, sigma2_eps)
@@ -83,10 +94,10 @@ summary(lmm1)
 
 # Fixed Effects and 95% CIs
 #-------------------------------
-confint(lmm1, oldNames=TRUE) #devo controllare sempre lo 0?
+confint(lmm1, oldNames=TRUE)
 fixef(lmm1)
 
-# The fixed effects tell us there is a negative effect of being male (immigrant) on achievement, 
+# The fixed effects tell us there is a negative effect of being immigrant on achievement, 
 # and on average, students with higher ESCS_status are associated to higher achievement scores.
 
 
@@ -94,11 +105,11 @@ fixef(lmm1)
 # Variance components
 #--------------------
 # One thing that's new compared to the standard regression output is the estimated 
-# variance/standard deviation of the studentsData effect.
-# This tells us how much, on average, achievement bounces around as we move from studentsData to studentsData. 
-# In other words, even after making a prediction based on student covariates, each studentsData has its
+# variance/standard deviation of the country effect.
+# This tells us how much, on average, achievement bounces around as we move from country to country 
+# In other words, even after making a prediction based on student covariates, each country has its
 # own unique deviation, and that value (in terms of the standard deviation) is the estimated 
-# average deviation across studentsDatas. 
+# average deviation across countries 
 
 print(vc <- VarCorr(lmm1), comp = c("Variance", "Std.Dev."))
 help(get_variance)
@@ -115,8 +126,8 @@ sigma2_b
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE
 
-# PVRE = 41.8% is very high!
-# PVRE = 0.02063386 per noi male
+# masci: PVRE = 41.8% is very high!
+# PVRE = 0.01561511 piuttosto bassa per il nostro modello
 
 # Random effects: b_0i
 #----------------------------
@@ -126,12 +137,11 @@ ranef(lmm1)
 # ordering them and highlighting which are significantly different from the mean (0)
 
 x11()
-dotplot(ranef(lmm1)) #carino
+dotplot(ranef(lmm1))
 
 # Random intercepts and fixed slopes: (beta_0+b_0i, beta_1, beta_2)
 coef(lmm1)
 head(coef(lmm1)$country)
-
 
 
 ## visualization of the coefficients, non ho molto capito
@@ -162,7 +172,7 @@ legend(30, 2.35, legend=expression(paste('Fixed slope ',beta[2])), lwd=2, lty=2,
 x11()
 par(mfrow=c(1,2))
 plot(studentsData$ESCS_status[studentsData$immigration==0], studentsData$math[studentsData$immigration==0],col='blue',
-     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
+     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for natives')
 #abline(10.02507,1.96618, col='red', lw=6)          
 
 for(i in 1:50){
@@ -171,7 +181,7 @@ for(i in 1:50){
 
 ## MALES
 plot(studentsData$ESCS_status[studentsData$immigration==1], studentsData$math[studentsData$immigration==1],col='blue',
-     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
+     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for immigrants')
 #abline(10.02507,1.96618, col='red', lw=6)          
 
 for(i in 1:50){
@@ -193,47 +203,6 @@ qqline(resid(lmm1), col='red', lwd=2)
 x11()
 qqnorm(unlist(ranef(lmm1)$country), main='Normal Q-Q Plot - Random Effects for Primary studentsData')
 qqline(unlist(ranef(lmm1)$country), col='red', lwd=2)
-
-
-
-# Prediction
-#-------------
-# Let's now examine standard predictions vs. cluster-specific predictions.
-# As with most R models, we can use the predict function on the model object.
-
-# Prediction from regression model
-predict_lm <- predict(lm1)
-head(predict_lm)
-
-# Prediction from mixed model:
-# 1) Without random effects ->  re.form=NA
-predict_no_re <- predict(lmm1, re.form=NA)
-head(predict_no_re) # same predictions
-# 2) With random effects
-predict_re <- predict(lmm1)     ## --> remember to allow new levels in the RE if any
-head(predict_re)
-
-## Scenario Analysis
-
-# Let's imagine to observe three new students with the same personal characteristics but enrolled in different studentsDatas,
-# two of them are observed and one is new
-
-new_student1 = data.frame(immigration=as.factor(1), ESCS_status=0.7, country=32) # observed studentsData
-new_student2 = data.frame(immigration=as.factor(1), ESCS_status=0.7, country=11) # observed studentsData
-new_student3= data.frame(immigration=as.factor(1), ESCS_status=0.7, country=53) # new studentsData
-
-predict(lmm1, new_student1, re.form=NA)
-predict(lmm1, new_student1)
-
-predict(lmm1, new_student2, re.form=NA)
-predict(lmm1, new_student2)
-
-predict(lmm1, new_student3, re.form=NA)
-predict(lmm1, new_student3, allow.new.levels = T)
-
-
-
-
 
 #--------------------------------------------------#
 # Linear Mixed Model with Random Intercept & Slope #
@@ -284,8 +253,8 @@ sigma2_b
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE
 
-# PVRE = 56%
-#0.02304495
+#masci: PVRE = 56%
+#0.01820131
 
 # Estimates of fixed and random effects
 #--------------------------------------
