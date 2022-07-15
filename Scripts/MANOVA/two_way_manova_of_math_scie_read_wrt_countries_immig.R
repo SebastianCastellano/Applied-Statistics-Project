@@ -42,10 +42,8 @@ shapiro.test(sample(man.res,5000))$p #not super gaussian
 
 #Covariance structure
 interact.groups <- interaction(X.groups1,X.groups2)
-cov(X.values[which(X.groups=="Yes"),])
-cov(X.values[which(X.groups=="No"),])
 bartlett.test(X.values,interact.groups.fact) # ok if pvalue big , here it is not
-#Boxplot (graphical qualitative analysis)
+#Boxplot the groups (graphical qualitative analysis)
 col <- c("red","green3","blue")
 #Math
 x11()

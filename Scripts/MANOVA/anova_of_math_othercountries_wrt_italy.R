@@ -1,13 +1,13 @@
-############################# MANOVA COUNTRIES #################################
-# Differences among countries
+########### ANOVA OF MATH w.r.t. COUNTRIES - Confidence intervals of diff. with italy ################
 
-setwd("D:/APPLIED/PROGETTO/DATA")
+#a) Anova of math scores of other countries with respect to italy (all students)
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 
 EUR <- read.table(file = "student_eur.txt", header = T)
 
 countries = as.factor(EUR$country)
 
-name_countries <- c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR")
+name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE")
 n_countries <- length(name_countries)
 
 X = data.frame(EUR$math)
@@ -41,7 +41,7 @@ for(i in 2:n_countries)
 }
 
 x11()
-plot(centers, xaxt = "n", pch = 19, ylim = c(-10,35), 
+plot(centers, xaxt = "n", pch = 19, ylim = c(-13,45), 
      xlab = "Countries", ylab = "CI 95% Diff of Mean", main = "Math Score of All Students (vs Italy)")
 points(centers+intLength, pch = 19)
 points(centers-intLength, pch = 19)
@@ -55,13 +55,10 @@ graphics.off()
 
 ##########################################################################################################
 
-# ON IMMIGRANTS
-
-
+#b) Anova of math scores of other countries with respect to italy (IMMIGRANTS student only)
 EUR_imm = EUR[EUR$immigration!=1,]
 countries = as.factor(EUR_imm$country)
-
-name_countries <- c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR")
+name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE")
 n_countries <- length(name_countries)
 
 X = data.frame(EUR_imm$math)
@@ -104,61 +101,3 @@ abline(h=0)
 for(i in 1:(n_countries-1)){
   lines(c(i,i), c(centers[i]-intLength[i],centers[i]+intLength[i]), col = "red");
 }
-
-
-#########################################################################################################
-
-# RANKING OF COUNTRIES BASED ON MATH PERFORMANCE
-
-EUR <- read.table(file = "student_eur.txt", header = T)
-
-
-mean_countries = rep(0,n_countries)
-
-
-for(i in 1:n_countries)
-{
-  currName = levels(countries)[i]
-  mean_countries[i] = mean(EUR$math[EUR$country==currName])
-}
-
-idxOrder = order(mean_countries)
-meanOrder = sort(mean_countries)
-nameOrder = levels(countries)[idxOrder]
-
-x11()
-barplot(round(meanOrder), names.arg = nameOrder, xlab = 'Countries', 
-        ylab = 'Mean Math Score', ylim = c(0,600), main = 'Math Score Ranking', col = 'gold')
-
-
-X = data.frame('math' = EUR$math, 'country' = as.factor(EUR$country))
-Y = data.frame()
-for (name in nameOrder)
-{
-  Y = rbind(Y, X[X$country==name,])
-}
-
-x11()
-boxplot(math ~  country, Y, col = 'gold')
-
-#---------------------------------------------------------
-EUR_imm = EUR[EUR$immigration!=1,]
-
-mean_countries_imm = rep(0,n_countries)
-
-
-for(i in 1:n_countries)
-  
-{
-  currName = levels(countries)[i]
-  mean_countries_imm[i] = mean(EUR_imm$math[EUR_imm$country==currName])
-}
-
-idxOrder_imm = order(mean_countries_imm)
-meanOrder_imm = sort(mean_countries_imm)
-nameOrder_imm = levels(countries)[idxOrder_imm]
-
-x11()
-barplot(round(meanOrder_imm), names.arg = nameOrder_imm, xlab = 'Countries', 
-        ylab = 'Mean Math Score', ylim = c(0,600), main = 'Math Score Ranking of Immigrants', col = 'gold')
-
