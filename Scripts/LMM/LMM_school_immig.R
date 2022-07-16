@@ -59,10 +59,11 @@ ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(sch
 
 # MODEL: achiev_i = beta_0 + beta_1*gender_i+ beta_2*ESCS_status_i + eps_i
 # eps_i ~ N(0, sigma2_eps)
-ESCS_status
 
+#cerco il modello lineare migliore per poi usarlo nei LMM
 lm1 = lm(math ~ ., data = studentsData2)
 summary(lm1)
+
 
 library(glmnet)
 x <- model.matrix(math ~ ., data = studentsData2)[,-1]# matrix of predictors
@@ -79,7 +80,7 @@ abline(v=log(bestlam.lasso), lty=1)
 coef.lasso <- as.matrix(predict(fit.lasso, s=bestlam.lasso, type = 'coefficients')) # coefficients for the optimal lambda
 coef.lasso 
 
-#poi verifico assumptions!!!
+#da verificare assumptions per lasso reg!!!
 
 lm2 = lm(math ~ gender + language + grade_rep + belonging + home_poss + cult_poss + learn_time_scie + read + scie +
            class_size + short_edu_mat + stu_behav + teach_behav, data = studentsData2)
@@ -88,13 +89,67 @@ summary(lm2)
 lm3 = lm(math ~ gender + language + grade_rep + belonging + home_poss + read + scie, data = studentsData2)
 summary(lm3)
 
-plot(studentsData$ESCS_status,studentsData$math, col='blue')
-abline(512.555,26.387, col='green', lw=4)          # females
-abline(512.555 -23.189,26.387, col='orange', lw=4)  # males
-
 plot(lm1$residuals)
 
 boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData ID', ylab='Residuals')
+## residuals differ a lot across schools
+
+#altro tentativo
+lm4 = lm(math ~ gender + language + hisced + grade_rep + fear_failure + belonging + bullied + home_poss + cult_poss + 
+           edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + school_changes +
+           learn_time_math + class_size + stud_teach_ratio + short_edu_mat + short_edu_staff +
+           stu_behav + teach_behav + teach_multicult, data = studentsData)
+summary(lm4)
+
+library(glmnet)
+x <- model.matrix(math ~ gender + language + hisced + grade_rep + fear_failure + belonging + bullied + home_poss + cult_poss + 
+                    edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + school_changes +
+                    learn_time_math + class_size + stud_teach_ratio + short_edu_mat + short_edu_staff +
+                    stu_behav + teach_behav + teach_multicult, data = studentsData)[,-1]# matrix of predictors
+y <- studentsData2$math # vector of response
+lambda.grid <- 10^seq(5,-3,length=100)# grid of candidate lambda's for the estimate
+fit.lasso <- glmnet(x,y, lambda = lambda.grid) # default: alpha=1, if alpha=0 -> ridge regression
+plot(fit.lasso,xvar='lambda',label=TRUE, col = rainbow(dim(x)[2]))
+legend('topright', dimnames(x)[[2]], col =  rainbow(dim(x)[2]), lty=1, cex=1)
+cv.lasso <- cv.glmnet(x,y,lambda=lambda.grid) # set lambda via cross validation, default: 10-fold CV
+bestlam.lasso <- cv.lasso$lambda.min
+bestlam.lasso
+plot(cv.lasso)
+abline(v=log(bestlam.lasso), lty=1)
+coef.lasso <- as.matrix(predict(fit.lasso, s=bestlam.lasso, type = 'coefficients')) # coefficients for the optimal lambda
+coef.lasso 
+
+#da verificare assumptions per lasso reg!!!
+
+lm5 = lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + home_poss + cult_poss + 
+           edu_resources + family_wealth + ESCS_status + teacher_support + emo_sup + school_changes +
+           learn_time_math + class_size + stud_teach_ratio + short_edu_mat + short_edu_staff +
+           stu_behav + teach_behav + teach_multicult, data = studentsData)
+summary(lm5)
+
+lm6 = lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + home_poss + cult_poss + 
+           family_wealth + ESCS_status + teacher_support + emo_sup + school_changes +
+           learn_time_math + class_size + stud_teach_ratio + short_edu_mat + short_edu_staff +
+           stu_behav + teach_behav + teach_multicult, data = studentsData)
+summary(lm6)
+
+#...modello finale
+lm7 = lm(math ~ gender + grade_rep + bullied + home_poss +  
+           family_wealth + school_changes +
+           class_size + stud_teach_ratio +
+           stu_behav + teach_behav + teach_multicult, data = studentsData)
+summary(lm7)
+
+linearHypothesis(lm7,c(0,0,0,0,1,1,0,0,0,0,0,0), c(0)) #non sono significativi home_poss e family_wealth
+
+lm7 = lm(math ~ gender + grade_rep + bullied + home_poss +  
+           school_changes + class_size + stud_teach_ratio +
+           stu_behav + teach_behav + teach_multicult, data = studentsData)
+summary(lm7)
+
+plot(lm7$residuals)
+
+boxplot(lm7$residuals ~ studentsData$school_id, col='orange', xlab='studentsData ID', ylab='Residuals')
 ## residuals differ a lot across schools
 
 #-----------------------------#
@@ -106,11 +161,10 @@ boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData
 # eps_ij ~ N(0, sigma2_eps)
 # b_i ~ N(0, sigma2_b)
 
-lmm1 = lmer(math ~ gender + grade_rep + bullied + 
-              + home_poss + family_wealth +
-              + school_changes + stud_teach_ratio + 
-              + stu_behav + teach_behav + teach_multicult + (1|school_id), 
-            data = studentsData)
+lmm1 = lmer(math ~ gender + grade_rep + bullied + home_poss +  
+              school_changes +
+              class_size + stud_teach_ratio +
+              stu_behav + teach_behav + teach_multicult + (1|school_id), data = studentsData)
 summary(lmm1)
 
 
@@ -149,7 +203,7 @@ PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE
 
 # masci: PVRE = 41.8% is very high!
-# PVRE = 0.1762841
+# PVRE = 0.1867269
 
 # Random effects: b_0i
 #----------------------------
@@ -196,7 +250,6 @@ x11()
 par(mfrow=c(1,2))
 plot(studentsData$ESCS_status[studentsData$immigration==0], studentsData$math[studentsData$immigration==0],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
-#abline(10.02507,1.96618, col='red', lw=6)          
 
 for(i in 1:50){
   abline(coef(lmm1)$school_id[i,1], coef(lmm1)$school_id[i,3])
@@ -204,8 +257,7 @@ for(i in 1:50){
 
 ## MALES
 plot(studentsData$ESCS_status[studentsData$immigration==1], studentsData$math[studentsData$immigration==1],col='blue',
-     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
-#abline(10.02507,1.96618, col='red', lw=6)          
+     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')          
 
 for(i in 1:50){
   abline(coef(lmm1)$school_id[i,1] + coef(lmm1)$school_id[i,2], coef(lmm1)$school_id[i,3])
@@ -243,9 +295,9 @@ graphics.off()
 
 # To allow both the intercept, represented by 1, and the slope, represented by ESCS_status,
 # to vary by student we can add the term:
-#   - (1+ESCS_status|studentsData_id)
+#   - (1+ESCS_status|school_id)
 # or, in alternative, without 1
-#   - (ESCS_status|studentsData_id)
+#   - (ESCS_status|school_id)
 
 lmm2 = lmer(math ~ immigration + ESCS_status + (1 + ESCS_status|school_id), 
             data = studentsData)

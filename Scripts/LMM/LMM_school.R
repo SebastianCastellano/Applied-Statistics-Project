@@ -17,8 +17,6 @@ library(ggplot2)
 ### SCHOOL_ID ###
 #################
 
-#forse sono troppo poche le countries che osserviamo
-
 studentsData= read.table(file = "student_ita.txt", header = T)
 studentsData=na.omit(studentsData)
 
@@ -171,7 +169,6 @@ for(i in 1:50){
 ## MALES
 plot(studentsData$ESCS_status[studentsData$immigration==1], studentsData$math[studentsData$immigration==1],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
-#abline(10.02507,1.96618, col='red', lw=6)          
 
 for(i in 1:50){
   abline(coef(lmm1)$school_id[i,1] + coef(lmm1)$school_id[i,2], coef(lmm1)$school_id[i,3])
@@ -298,7 +295,7 @@ x11()
 par(mfrow=c(1,2))
 plot(studentsData$ESCS_status[studentsData$immigration==0], studentsData$math[studentsData$immigration==0],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
-#abline(10.0546535,1.6790886, col='red', lw=6)          
+         
 
 for(i in 1:50){
   abline(coef(lmm2)$school_id[i,1], coef(lmm2)$school_id[i,3])
@@ -307,7 +304,7 @@ for(i in 1:50){
 ## MALES
 plot(studentsData$ESCS_status[studentsData$immigration==1], studentsData$math[studentsData$immigration==1],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for males')
-#abline(10.02507-0.91180,1.96618, col='red', lw=6)  
+ 
 
 for(i in 1:50){
   abline(coef(lmm2)$school_id[i,1] + coef(lmm2)$school_id[i,2], coef(lmm2)$school_id[i,3])

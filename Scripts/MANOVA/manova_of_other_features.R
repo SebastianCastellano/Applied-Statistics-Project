@@ -21,21 +21,22 @@ name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX
 n_countries <- length(countries) 
 
 variables <- c("CULTURAL POSSESSIONS", "FAMILY WEALTH", "ESCS STATUS", 
-               "EDUCATIONAL RESOURCES, HOME POSSESSIONS")
+               "EDUCATIONAL RESOURCES, HOME POSSESSIONS, MATH LEARN TIME")
 
 cp_scores <- rep(0, n_countries)
 fw_scores <- rep(0, n_countries)
 es_scores <- rep(0, n_countries)
 er_scores <- rep(0, n_countries)
 hp_scores <- rep(0, n_countries)
+ml_scores <- rep(0, n_countries)
 
 for (i in 1:n_countries) {
   
   # BUILD DATAFRAMES ----
   
   X = data.frame(countries[[i]]$cult_poss, countries[[i]]$family_wealth,  countries[[i]]$ESCS_status, 
-                 countries[[i]]$edu_resources, countries[[i]]$home_poss)
-  names(X) = c("cult_poss","family_wealth", "ESCS_status", "edu_resources", "home_poss")
+                 countries[[i]]$edu_resources, countries[[i]]$home_poss, countries[[i]]$learn_time_math)
+  names(X) = c("cult_poss","family_wealth", "ESCS_status", "edu_resources", "home_poss","learn_time_math")
   immStatus = countries[[i]]$immigration
   
   ## Extract Indeces
@@ -237,6 +238,30 @@ for (i in 1:n_countries) {
     print(paste("Immig2 mean = ", m3[5]))
     print(paste("p-value: ", pval23[5]))
   }
+  
+  ############## Math learn time
+  ml_scores[i] = m1[6] - mImm[6]
+  print("MATH LEARN TIME")
+  if(inf12[6]>0 || sup12[6]<0){
+    print("Native - 1° Generation Immigrants")
+    print(paste("Native mean = ", m1[6]))
+    print(paste("Immig1 mean = ", m2[6]))
+    print(paste("p-value: ", pval12[6]))
+  }
+  
+  if(inf13[6]>0 || sup13[6]<0){
+    print("Native - 2° Generation Immigrants")
+    print(paste("Native mean = ", m1[6]))
+    print(paste("Immig2 mean = ", m3[6]))
+    print(paste("p-value: ", pval13[6]))
+  }
+  
+  if(inf23[6]>0 || sup23[6]<0){
+    print("1° Generation Immigrants - 2° Generation Immigrants")
+    print(paste("Immig1 mean = ", m2[6]))
+    print(paste("Immig2 mean = ", m3[6]))
+    print(paste("p-value: ", pval23[6]))
+  }
 }
 
 cp_order = order(cp_scores)
@@ -244,29 +269,30 @@ fw_order = order(fw_scores)
 es_order = order(es_scores)
 er_order = order(er_scores)
 hp_order = order(hp_scores)
+ml_order = order(ml_scores)
 
 cp_rank = name_countries[cp_order]
 fw_rank = name_countries[fw_order]
 es_rank = name_countries[es_order]
 er_rank = name_countries[er_order]
 hp_rank = name_countries[hp_order]
-
+ml_rank = name_countries[ml_order]
 
 # GRAPHICAL VISUALIZATION ----
 x11(width = 18, height = 15)
-par(mfrow = c(3,2))
+par(mfrow = c(3,3),las=2)
 barplot(sort(cp_scores), names.arg = cp_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "CULTURAL POSSESSIONS", col = "red", cex.names = 0.9)
+        ylab = "Native vs IMM", main = "CULTURAL POSSESSIONS", col = "red")
 barplot(sort(fw_scores), names.arg = fw_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "FAMILY WEALTH", col = "blue", cex.names = 0.9)
+        ylab = "Native vs IMM", main = "FAMILY WEALTH", col = "blue")
 barplot(sort(es_scores), names.arg = es_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "ESCS STATUS", col = "green", cex.names = 0.9)
+        ylab = "Native vs IMM", main = "ESCS STATUS", col = "green")
 barplot(sort(er_scores), names.arg = er_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "EDUCATIONAL RESOURCES", col = "gold", cex.names = 0.9)
+        ylab = "Native vs IMM", main = "EDUCATIONAL RESOURCES", col = "gold")
 barplot(sort(hp_scores), names.arg = hp_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "HOME POSSESSIONS", col = "pink", cex.names = 0.9)
+        ylab = "Native vs IMM", main = "HOME POSSESSIONS", col = "pink")
+barplot(sort(ml_scores), names.arg = ml_rank, xlab ="Countries",
+        ylab = "Native vs IMM", main = "MATH LEARN TIME", col = "purple")
+## GRAPH WAS SAVED 
 
-## GRAPH WAS SAVED AS : barplot_wealth_countries
-
-graphics.off()
 
