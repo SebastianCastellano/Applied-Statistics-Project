@@ -17,7 +17,6 @@ library(ggplot2)
 ### COUNTRY ###
 ###############
 
-setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 studentsData= read.table(file = "student_eur.txt", header = T)
 studentsData=na.omit(studentsData)
 
@@ -65,7 +64,7 @@ ggplot(data=studentsData, aes(x=as.factor(country), y=read, fill=as.factor(count
 # MODEL: achiev_i = beta_0 + beta_1*gender_i+ beta_2*ESCS_status_i + eps_i
 # eps_i ~ N(0, sigma2_eps)
 
-lm1 = lm(math ~ immigration + ESCS_status, data = studentsData)
+lm1 = lm(math ~ immigration + ESCS_status, data = studentsData) #provo con modelli più complessi trovati da luci
 summary(lm1)
 
 plot(studentsData$ESCS_status,studentsData$math, col='blue')
@@ -75,7 +74,7 @@ abline(512.5298 -23.8581,29.2562, col='orange', lw=4)  # immigrants
 plot(lm1$residuals)
 
 boxplot(lm1$residuals ~ studentsData$country, col='orange', xlab='country', ylab='Residuals')
-## residuals don't differ a lot across studentsDatas
+## residuals don't differ a lot across countries
 
 
 #-----------------------------#
@@ -173,8 +172,7 @@ x11()
 par(mfrow=c(1,2))
 plot(studentsData$ESCS_status[studentsData$immigration==0], studentsData$math[studentsData$immigration==0],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for natives')
-#abline(10.02507,1.96618, col='red', lw=6)          
-
+    
 for(i in 1:50){
   abline(coef(lmm1)$country[i,1], coef(lmm1)$country[i,3])
 }
@@ -182,8 +180,7 @@ for(i in 1:50){
 ## MALES
 plot(studentsData$ESCS_status[studentsData$immigration==1], studentsData$math[studentsData$immigration==1],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for immigrants')
-#abline(10.02507,1.96618, col='red', lw=6)          
-
+      
 for(i in 1:50){
   abline(coef(lmm1)$country[i,1] + coef(lmm1)$country[i,2], coef(lmm1)$country[i,3])
 }
@@ -308,7 +305,7 @@ x11()
 par(mfrow=c(1,2))
 plot(studentsData$ESCS_status[studentsData$immigration==0], studentsData$math[studentsData$immigration==0],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
-#abline(10.0546535,1.6790886, col='red', lw=6)          
+       
 
 for(i in 1:50){
   abline(coef(lmm2)$country[i,1], coef(lmm2)$country[i,3])
@@ -317,7 +314,6 @@ for(i in 1:50){
 ## MALES
 plot(studentsData$ESCS_status[studentsData$immigration==1], studentsData$math[studentsData$immigration==1],col='blue',
      xlab='ESCS_status', ylab='achievement',main='Data and regression lines for males')
-#abline(10.02507-0.91180,1.96618, col='red', lw=6)  
 
 for(i in 1:50){
   abline(coef(lmm2)$country[i,1] + coef(lmm2)$country[i,2], coef(lmm2)$country[i,3])
