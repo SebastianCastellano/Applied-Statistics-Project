@@ -183,11 +183,9 @@ plot(gm4)
 shapiro.test(residuals(gm4))
 # pvalue = 0.04053
 
-
-
 #-------------------------------------------------------------------------------
 
-# tutte le variabili (no country) DA RIFARE con variabili nuove 
+# Tutte le variabili (no country) 
 
 gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
@@ -200,14 +198,266 @@ gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_fai
             + immigration:teach_behav)
 summary(gm3)
 
+# Tolgo class_size
+gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + short_edu_staff +
+            + stu_behav + teach_behav + immigration:gender + immigration:language + immigration:hisced + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
 
+# Tolgo language 
+gm3 <- lm(math ~ gender + immigration + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + short_edu_staff +
+            + stu_behav + teach_behav + immigration:gender + immigration:language + immigration:hisced + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
 
+# Tolgo immigration 
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + short_edu_staff +
+            + stu_behav + teach_behav + immigration:gender + immigration:language + immigration:hisced + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:hisced 
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + short_edu_staff +
+            + stu_behav + teach_behav + immigration:gender + immigration:language + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:fear_failure
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + short_edu_staff +
+            + stu_behav + teach_behav + immigration:gender + immigration:language + 
+            + immigration:grade_rep + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo short_edu_staff
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + 
+            + stu_behav + teach_behav + immigration:gender + immigration:language + 
+            + immigration:grade_rep + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:gender 
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + stu_behav + teach_behav + immigration:language + 
+            + immigration:grade_rep + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo teacher_support 
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + stu_behav + teach_behav + immigration:language + 
+            + immigration:grade_rep + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:emo_sup
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + stu_behav + teach_behav + immigration:language + 
+            + immigration:grade_rep + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:belonging
+gm3 <- lm(math ~ gender + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + stu_behav + teach_behav + immigration:language + 
+            + immigration:grade_rep + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo grade_rep 
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + 
+            + ESCS_status + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + stu_behav + teach_behav + immigration:language + 
+            + immigration:grade_rep + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav + 
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:stu_behav
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + 
+            + ESCS_status + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + stu_behav + teach_behav + immigration:language + 
+            + immigration:grade_rep + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff +  
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:language
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + 
+            + ESCS_status + emo_sup + school_changes + learn_time_math + 
+            + stud_teach_ratio + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff +  
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo stud_teach_ratio 
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + 
+            + ESCS_status + emo_sup + school_changes + learn_time_math + 
+            + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff +  
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo emo_sup 
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + 
+            + ESCS_status + school_changes + learn_time_math + 
+            + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff +  
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:ESCS_status
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + 
+            + ESCS_status + school_changes + learn_time_math + 
+            + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:bullied + 
+            + immigration:teacher_support + immigration:school_changes +
+            + immigration:learn_time_math + immigration:class_size + immigration:stud_teach_ratio +
+            + immigration:short_edu_mat + immigration:short_edu_staff +  
+            + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:stud_teach_ratio
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + ESCS_status +
+            + school_changes + learn_time_math + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:bullied + immigration:teacher_support + 
+            + immigration:school_changes + immigration:learn_time_math + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:class_size 
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + ESCS_status +
+            + school_changes + learn_time_math + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:bullied + immigration:teacher_support + 
+            + immigration:school_changes + immigration:learn_time_math + 
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo school_changes 
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + ESCS_status +
+            + learn_time_math + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:bullied + immigration:teacher_support + 
+            + immigration:school_changes + immigration:learn_time_math + 
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:bullied 
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + ESCS_status +
+            + learn_time_math + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:teacher_support + 
+            + immigration:school_changes + immigration:learn_time_math + 
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:teacher_support
+gm3 <- lm(math ~ gender + hisced + fear_failure + belonging + bullied + ESCS_status +
+            + learn_time_math + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:school_changes + immigration:learn_time_math + 
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo belonging 
+gm3 <- lm(math ~ gender + hisced + fear_failure + bullied + ESCS_status +
+            + learn_time_math + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:school_changes + immigration:learn_time_math + 
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:learn_time_math
+gm3 <- lm(math ~ gender + hisced + fear_failure + bullied + ESCS_status +
+            + learn_time_math + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:grade_rep + immigration:school_changes +  
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo immigration:grade_rep 
+gm3 <- lm(math ~ gender + hisced + fear_failure + bullied + ESCS_status +
+            + learn_time_math + short_edu_mat + stu_behav + teach_behav + immigration:school_changes +  
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo learn_time_math 
+gm3 <- lm(math ~ gender + hisced + fear_failure + bullied + ESCS_status +
+            + short_edu_mat + stu_behav + teach_behav + immigration:school_changes +  
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
+
+# Tolgo hisced 
+gm3 <- lm(math ~ gender + fear_failure + bullied + ESCS_status +
+            + short_edu_mat + stu_behav + teach_behav + immigration:school_changes +  
+            + immigration:short_edu_mat + immigration:short_edu_staff + immigration:teach_behav)
+summary(gm3)
 
 x11()
 par(mfrow=c(2,2))
 plot(gm3)
+# ok
 
 shapiro.test(residuals(gm3))
+# pvalue = 0.05928
 
 #-------------------------------------------------------------------------------
 
