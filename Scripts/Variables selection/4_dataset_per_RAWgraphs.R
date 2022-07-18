@@ -90,3 +90,10 @@ write.table(SWE,file="student_swe_immig.txt", row.names = FALSE, sep = ";")
 write.table(CHE,file="student_che_immig.txt", row.names = FALSE, sep = ";") 
 write.table(GBR,file="student_gbr_immig.txt", row.names = FALSE, sep = ";") 
 write.table(EUR,file="student_eur_immig.txt", row.names = FALSE, sep = ";")
+
+
+EUR$immigration[which(EUR$immigration==1)] = 'native';
+EUR$immigration[which(EUR$immigration==2 + I(EUR$immigration==3))] = 'immigrant';
+write.table(EUR,file="student_eur2.txt", row.names = FALSE, sep = ";")
+
+

@@ -23,6 +23,7 @@ studentsData=na.omit(studentsData)
 studentsData$immigration[which(studentsData$immigration==1)] = 0;
 studentsData$immigration[which(studentsData$immigration==2 + I(studentsData$immigration==3))] = 1;
 table(studentsData$immigration)
+studentsData <- studentsData[,-10]
 studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 studentsData$country= as.factor(studentsData$country)
@@ -356,7 +357,137 @@ anova(lmm1, lmm2)
 
 # The p-value for the test is essentially zero -> we prefer lmm2
 
+################
 
+lmm3 = lmer(math ~ immigration + ESCS_status + (1 + immigration|country), 
+            data = studentsData)
+summary(lmm3)
+
+confint(lmm3, oldNames=TRUE)#escs non significativo
+
+# Variance components
+#--------------------
+# In this case the variance of random sigma2_R effects represents the mean random 
+# effect variance of the model and is given by
+# sigma2_b = Var(b0,b1) = sigma2_b0 + 2Cov(b0,b1)*mean(w) + sigma2_b1*mean(w^2)
+# See equation (10) in Johnson (2014), Methods in Ecology and Evolution, 5(9), 944-946.
+
+print(vc <- VarCorr(lmm3), comp = c("Variance", "Std.Dev."))
+
+sigma3_eps <- as.numeric(get_variance_residual(lmm3))
+sigma3_eps
+sigma3_b <- as.numeric(get_variance_random(lmm3))  ## it automatically computes Var(b0,b1)
+# 4.3228 + 2*0.164*2.0791*1.6451* mean(studentsData$ESCS_status, na.rm=T) + 2.7063*mean(studentsData$ESCS_status^2, na.rm=T)
+sigma3_b
+
+PVRE <- sigma3_b/(sigma3_b+sigma3_eps)
+PVRE
+
+#masci: PVRE = 56%
+#0.01820131
+
+# Estimates of fixed and random effects
+#--------------------------------------
+
+# Fixed effects: (beta_0, beta_1, beta_2)
+fixef(lmm3)
+
+# Random effects: (b_0i, b_1i) for i=1,...,200
+ranef(lmm3)
+head(ranef(lmm3)$country)
+
+x11()
+dotplot(ranef(lmm3))
+
+# Random intercepts and slopes: (beta_0+b_0i, beta_1, beta_2+b_2i)
+coef(lmm3)
+head(coef(lmm3)$country)
+
+## Visualization of random effects 
+x11()
+par(mfrow=c(1,3))
+plot(unlist(coef(lmm2)$country[1]),
+     xlab='country i', ylab=expression(beta[0]+b['0i']),
+     pch=19, lwd=2, col='darkblue',
+     main='Estimated random intercepts')
+abline(h=fixef(lmm2)[1], lty=2, col='red', lwd=2)
+legend(30, 13.5, legend=expression(paste('Fixed intercept ',beta[0])), lwd=2, lty=2, col='red', x.intersp=0.5)
+
+plot(unlist(coef(lmm2)$country[2]),
+     xlab='country i', ylab=expression(beta[1]),
+     pch=19, lwd=2, col='darkblue',
+     main='Estimated fixed slope for gender')
+abline(h=fixef(lmm2)[2], lty=2, col='red', lwd=2)
+legend(30,-0.6, legend=expression(paste('Fixed slope ',beta[1])), lwd=2, lty=2, col='red', x.intersp=0.5)
+
+plot(unlist(coef(lmm2)$country[3]),
+     xlab='Student i', ylab=expression(beta[2]+b['1i']),
+     pch=19, lwd=2, col='darkblue',
+     main='Estimated random slopes for ESCS_status')
+abline(h=fixef(lmm2)[3], lty=2, col='red', lwd=2)
+legend(30, 5, legend=expression(paste('Fixed slope ',beta[2])), lwd=2, lty=2, col='red', x.intersp=0.5)
+
+
+# Lines Visualization
+#---------------------
+
+
+# Let's plot all the regression lines
+## FEMALES
+x11()
+par(mfrow=c(1,2))
+plot(studentsData$ESCS_status[studentsData$immigration==0], studentsData$math[studentsData$immigration==0],col='blue',
+     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for females')
+
+
+for(i in 1:50){
+  abline(coef(lmm2)$country[i,1], coef(lmm2)$country[i,3])
+}
+
+## MALES
+plot(studentsData$ESCS_status[studentsData$immigration==1], studentsData$math[studentsData$immigration==1],col='blue',
+     xlab='ESCS_status', ylab='achievement',main='Data and regression lines for males')
+
+for(i in 1:50){
+  abline(coef(lmm2)$country[i,1] + coef(lmm2)$country[i,2], coef(lmm2)$country[i,3])
+}
+
+
+# Diagnostic plots 
+#--------------------
+# 1) Assessing Assumption on the within-group errors
+x11()
+plot(lmm2)
+
+x11()
+qqnorm(resid(lmm2))
+qqline(resid(lmm2), col='red', lwd=2)
+
+
+# 2) Assessing Assumption on the Random Effects
+x11()
+par(mfrow=c(1,2))
+qqnorm(unlist(ranef(lmm2)$country[1]), main='Normal Q-Q Plot - Random Effects on Intercept')
+qqline(unlist(ranef(lmm2)$country[1]), col='red', lwd=2)
+qqnorm(unlist(ranef(lmm2)$country[2]), main='Normal Q-Q Plot - Random Effects on ESCS_status')
+qqline(unlist(ranef(lmm2)$country[2]), col='red', lwd=2)
+
+x11()
+plot(unlist(ranef(lmm2)$country[2]),unlist(ranef(lmm2)$country[1]),
+     ylab=expression(paste('Intercept  ', b['0i'])),
+     xlab=expression(paste('ESCS_status  ', b['1i'])), col='dodgerblue2',
+     main='Scatterplot of estimated random effects')
+abline(v=0,h=0)
+# Alternative plot(ranef(lmm2))
+
+
+# Comparing models
+#------------------
+# The anova function, when given two or more arguments representing fitted models,
+# produces likelihood ratio tests comparing the models.
+anova(lmm1, lmm3)
+
+# The p-value for the test is essentially zero -> we prefer lmm2
 
 
 
