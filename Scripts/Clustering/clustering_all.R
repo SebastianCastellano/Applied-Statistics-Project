@@ -17,8 +17,8 @@ CHE <- read.table(file = "student_che.txt", header = T)
 GBR <- read.table(file = "student_gbr.txt", header = T)
 EUR <- read.table(file = "student_eur.txt", header = T)
 
-countries <- list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR)
-name_countries <- c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR")
+countries <- list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR, EUR)
+name_countries <- c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR",'EUR')
 n_countries <- length(countries)
 
 varID = c('math', 'ESCS_status', 'family_wealth')
@@ -59,7 +59,6 @@ for (i in 1:n_countries) {
           , ylim = c(0,1), main = 'Fraction of immigrants in each cluster')
 }
 
-
 # MATH AND ----
 
 # Directory with raw datasets
@@ -86,6 +85,9 @@ varID = c('PV3MATH','WEALTH','ESCS')
 #'ST186Q08HA','PA009Q08NA','PA009Q03NA')
 varNames = c('math','family_wealth','ESCS_status')
  #         'sadness', 'parent_language_skills','parent_free_time')
+
+x11()
+plot(X, col = clusters)
 
 
 for (i in 1:n_countries) {
