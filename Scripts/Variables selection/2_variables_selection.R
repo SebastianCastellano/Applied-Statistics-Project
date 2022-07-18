@@ -45,11 +45,11 @@ school_features <- data.frame(school_id = as.character(school$CNTSCHID),
                     short_edu_staff = school$STAFFSHORT, #shortage in staff (WLE)
                     stu_behav = school$STUBEHA, #student behavior hindering learning (WLE)
                     teach_behav = school$TEACHBEHA, #teacher behavior hindering learning (WLE)
-                    teach_multicult = school$SCMCEG #School principal's view on teachers' multicultural and egalitarian beliefs (WLE)
-                    )
+                    teach_multicult = school$SCMCEG, #School principal's view on teachers' multicultural and egalitarian beliefs (WLE)
+                    private = school$PRIVATESCH)
 
 #Variable selection
-setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features2")
 for (i in 1:n_countries) {
   # Categorical variables:
   # school ID
@@ -74,10 +74,10 @@ for (i in 1:n_countries) {
                        # resilience = countries[[i]]$RESILIENCE, 
                        belonging = countries[[i]]$BELONG, #sense of belonging in school
                        bullied = countries[[i]]$BEINGBULLIED,
-                       home_poss = countries[[i]]$HOMEPOS, 
-                       cult_poss = countries[[i]]$CULTPOSS, 
-                       edu_resources = countries[[i]]$HEDRES, #home educational resources
-                       family_wealth = countries[[i]]$WEALTH,  
+                       #home_poss = countries[[i]]$HOMEPOS, 
+                       #cult_poss = countries[[i]]$CULTPOSS, 
+                       #edu_resources = countries[[i]]$HEDRES, #home educational resources
+                       #family_wealth = countries[[i]]$WEALTH,  
                        ESCS_status = countries[[i]]$ESCS, #Index of economic, social and cultural status
                        teacher_support = countries[[i]]$TEACHSUP, #Teacher support in test language lessons
                        emo_sup = countries[[i]]$EMOSUPS, #Parents' emotional support perceived by student
@@ -98,7 +98,7 @@ for (i in 1:n_countries) {
 }
 
 #Check that all countries have enough values for each feature
-setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features2")
 ITA= read.table(file = "student_ita.txt", header = T)
 AUT= read.table(file = "student_aut.txt", header = T)
 BEL= read.table(file = "student_bel.txt", header = T)

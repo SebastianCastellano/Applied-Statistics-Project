@@ -2,7 +2,7 @@
 #0=country language; 1=dialect; 2=foreign language; 3=other
 
 #Import datasets
-setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features2")
 ITA= read.table(file = "student_ita.txt", header = T)
 AUT= read.table(file = "student_aut.txt", header = T)
 BEL= read.table(file = "student_bel.txt", header = T)

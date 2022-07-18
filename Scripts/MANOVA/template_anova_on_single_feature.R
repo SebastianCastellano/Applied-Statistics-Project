@@ -20,15 +20,15 @@ name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX
 n_countries <- length(countries) 
 
 # MODIFY BELOW BASE ON SELECTED VARIABLE
-variable <- "MATH LEARN TIME" #for print purposes
+variable <- "READ LEARN TIME" #for print purposes
 variable_scores <- rep(0, n_countries) #will fill with native-immig mean scores for each country
 
 for (i in 1:n_countries) {
   
   # BUILD DATAFRAMES ----
   
-  X = data.frame(countries[[i]]$learn_time_math) # Change this according to variable of interest
-  names(X) = c("learn_time_math")
+  X = data.frame(countries[[i]]$learn_time_read) # Change this according to variable of interest
+  names(X) = c("learn_time_read")
   immStatus = countries[[i]]$immigration
 
   
@@ -107,22 +107,22 @@ for (i in 1:n_countries) {
   variable_scores[i] = m1[1] - mImm[1]
   if(inf12[1]>0 || sup12[1]<0){
     print("Native - 1° Generation Immigrants")
-    # print(paste("Native mean = ", m1[1]))
-    # print(paste("Immig1 mean = ", m2[1]))
+    print(paste("Native mean = ", m1[1]))
+    print(paste("Immig1 mean = ", m2[1]))
     print(paste("p-value: ", pval12[1]))
   }
   
   if(inf13[1]>0 || sup13[1]<0){
     print("Native - 2° Generation Immigrants")
-    # print(paste("Native mean = ", m1[1]))
-    # print(paste("Immig2 mean = ", m3[1]))
+    print(paste("Native mean = ", m1[1]))
+    print(paste("Immig2 mean = ", m3[1]))
     print(paste("p-value: ", pval13[1]))
   }
   
   if(inf23[1]>0 || sup23[1]<0){
     print("1° Generation Immigrants - 2° Generation Immigrants")
     # print(paste("Immig1 mean = ", m2[1]))
-    # print(paste("Immig2 mean = ", m3[1]))
+    print(paste("Immig2 mean = ", m3[1]))
     print(paste("p-value: ", pval23[1]))
   }
 }
@@ -134,6 +134,6 @@ variable_rank = name_countries[variable_order]
 x11()
 par(las=2)
 barplot(sort(variable_scores), names.arg = variable_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = variable, col = "red")
+        ylab = "Native vs IMM", main = variable, col = "blue")
 
 

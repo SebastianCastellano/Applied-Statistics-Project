@@ -16,7 +16,7 @@ library(ggplot2)
 #################
 ### SCHOOL_ID ###
 #################
-
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features2")
 studentsData= read.table(file = "student_gbr.txt", header = T)
 studentsData=na.omit(studentsData)
 
@@ -140,4 +140,5 @@ studentsData_pos_schools <- studentsData[which(studentsData$school_id %in% pos_s
 summary(studentsData_neg_schools)
 summary(studentsData_pos_schools)
 
-
+table(studentsData_neg_schools$private)
+table(studentsData_pos_schools$private)
