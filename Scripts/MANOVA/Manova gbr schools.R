@@ -1,34 +1,90 @@
-school_neg <- data.frame(studentsData_neg_schools$fear_failure,
-                         studentsData_neg_schools$belonging,
-                         studentsData_neg_schools$bullied,
-                         studentsData_neg_schools$teacher_support,
-                         studentsData_neg_schools$emo_sup,
-                         studentsData_neg_schools$class_size,
-                         studentsData_neg_schools$stud_teach_ratio,
-                         studentsData_neg_schools$short_edu_mat,
-                         studentsData_neg_schools$short_edu_staff,
-                         studentsData_neg_schools$stu_behav,
-                         studentsData_neg_schools$teach_behav,
-                         group = "neg" )
+school_neg_dnk <- data.frame(studentsData_neg_schools_dnk$fear_failure,
+                         studentsData_neg_schools_dnk$belonging,
+                         studentsData_neg_schools_dnk$bullied,
+                         studentsData_neg_schools_dnk$teacher_support,
+                         studentsData_neg_schools_dnk$emo_sup,
+                         studentsData_neg_schools_dnk$class_size,
+                         studentsData_neg_schools_dnk$stud_teach_ratio,
+                         studentsData_neg_schools_dnk$short_edu_mat,
+                         studentsData_neg_schools_dnk$short_edu_staff,
+                         studentsData_neg_schools_dnk$stu_behav,
+                         studentsData_neg_schools_dnk$teach_behav,
+                         studentsData_neg_schools_dnk$ESCS_status,
+                         studentsData_neg_schools_dnk$immigration,
+                         group = 0 )
 
-school_pos <- data.frame(studentsData_pos_schools$fear_failure,
-                         studentsData_pos_schools$belonging,
-                         studentsData_pos_schools$bullied,
-                         studentsData_pos_schools$teacher_support,
-                         studentsData_pos_schools$emo_sup,
-                         studentsData_pos_schools$class_size,
-                         studentsData_pos_schools$stud_teach_ratio,
-                         studentsData_pos_schools$short_edu_mat,
-                         studentsData_pos_schools$short_edu_staff,
-                         studentsData_pos_schools$stu_behav,
-                         studentsData_pos_schools$teach_behav,
-                         group = "pos")
-X <- as.data.frame(rbind(as.matrix(school_pos),as.matrix(school_neg)))
-X.values <- X[-12]
-X.groups<- as.factor(X$group)
+school_pos_dnk <- data.frame(studentsData_pos_schools_dnk$fear_failure,
+                         studentsData_pos_schools_dnk$belonging,
+                         studentsData_pos_schools_dnk$bullied,
+                         studentsData_pos_schools_dnk$teacher_support,
+                         studentsData_pos_schools_dnk$emo_sup,
+                         studentsData_pos_schools_dnk$class_size,
+                         studentsData_pos_schools_dnk$stud_teach_ratio,
+                         studentsData_pos_schools_dnk$short_edu_mat,
+                         studentsData_pos_schools_dnk$short_edu_staff,
+                         studentsData_pos_schools_dnk$stu_behav,
+                         studentsData_pos_schools_dnk$teach_behav,
+                         studentsData_pos_schools_dnk$ESCS_status,
+                         studentsData_pos_schools_dnk$immigration,
+                         group = 1)
 
-group1 <- school_pos
-group2 <- school_neg
+school_neg_dnk <- data.frame(studentsData_neg_schools_dnk$fear_failure,
+                             studentsData_neg_schools_dnk$belonging,
+                             studentsData_neg_schools_dnk$bullied,
+                             studentsData_neg_schools_dnk$teacher_support,
+                             studentsData_neg_schools_dnk$emo_sup,
+                             studentsData_neg_schools_dnk$class_size,
+                             studentsData_neg_schools_dnk$stud_teach_ratio,
+                             studentsData_neg_schools_dnk$short_edu_mat,
+                             studentsData_neg_schools_dnk$short_edu_staff,
+                             studentsData_neg_schools_dnk$stu_behav,
+                             studentsData_neg_schools_dnk$teach_behav,
+                             studentsData_neg_schools_dnk$ESCS_status,
+                             studentsData_neg_schools_dnk$immigration,
+                             group = 0 )
+
+school_pos_gbr <- data.frame(studentsData_pos_schools_gbr$fear_failure,
+                             studentsData_pos_schools_gbr$belonging,
+                             studentsData_pos_schools_gbr$bullied,
+                             studentsData_pos_schools_gbr$teacher_support,
+                             studentsData_pos_schools_gbr$emo_sup,
+                             studentsData_pos_schools_gbr$class_size,
+                             studentsData_pos_schools_gbr$stud_teach_ratio,
+                             studentsData_pos_schools_gbr$short_edu_mat,
+                             studentsData_pos_schools_gbr$short_edu_staff,
+                             studentsData_pos_schools_gbr$stu_behav,
+                             studentsData_pos_schools_gbr$teach_behav,
+                             studentsData_pos_schools_gbr$ESCS_status,
+                             studentsData_pos_schools_gbr$immigration,
+                             group = 1)
+
+school_neg_gbr <- data.frame(studentsData_neg_schools_gbr$fear_failure,
+                             studentsData_neg_schools_gbr$belonging,
+                             studentsData_neg_schools_gbr$bullied,
+                             studentsData_neg_schools_gbr$teacher_support,
+                             studentsData_neg_schools_gbr$emo_sup,
+                             studentsData_neg_schools_gbr$class_size,
+                             studentsData_neg_schools_gbr$stud_teach_ratio,
+                             studentsData_neg_schools_gbr$short_edu_mat,
+                             studentsData_neg_schools_gbr$short_edu_staff,
+                             studentsData_neg_schools_gbr$stu_behav,
+                             studentsData_neg_schools_gbr$teach_behav,
+                             studentsData_neg_schools_gbr$ESCS_status,
+                             studentsData_neg_schools_gbr$immigration,
+                             group = 0 )
+
+table(studentsData_neg_schools_gbr$immigration)
+table(studentsData_pos_schools_gbr$immigration)
+table(studentsData_neg_schools_dnk$immigration)
+table(studentsData_pos_schools_dnk$immigration)
+
+
+X <- as.data.frame(rbind(as.matrix(school_pos_gbr),as.matrix(school_neg_dnk)))
+X.values <- X[-14]
+X.groups<- factor(X$group, labels=c("neg","pos"))
+
+group1 <- X.values[which(X.groups=="pos"),]
+group2 <- X.values[which(X.groups=="neg"),]
 g <- 2
 p <- dim(group1)[2]
 n1 <- dim(group1)[1]

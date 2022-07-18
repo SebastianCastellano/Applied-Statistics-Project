@@ -272,9 +272,9 @@ intervals <- transform(dd, lwr=condval-1.96*condsd, upr=condval+1.96*condsd)
 neg_schools <- intervals$grp[which(intervals$lwr<0 & intervals$upr<0)]
 pos_schools <- intervals$grp[which(intervals$lwr>0 & intervals$upr>0)]
 
-studentsData_neg_schools <- studentsData[which(studentsData$school_id %in% neg_schools),]
-studentsData_pos_schools <- studentsData[which(studentsData$school_id %in% pos_schools),]
-summary(studentsData_neg_schools)
-summary(studentsData_pos_schools)
+studentsData_neg_schools_dnk <- studentsData[which(studentsData$school_id %in% neg_schools),]
+studentsData_pos_schools_dnk <- studentsData[which(studentsData$school_id %in% pos_schools),]
+summary(studentsData_neg_schools_dnk)
+summary(studentsData_pos_schools_dnk)
 
 
