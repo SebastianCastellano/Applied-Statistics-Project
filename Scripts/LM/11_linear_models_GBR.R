@@ -796,16 +796,78 @@ gm3 <- lm(read ~ language + hisced + grade_rep + fear_failure + belonging + bull
             + immigration:short_edu_mat + immigration:short_edu_staff)
 summary(gm3)
 
-# Tolgo 
+# Tolgo immigration:gender
 gm3 <- lm(read ~ language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + learn_time_read + 
-            + short_edu_mat + stu_behav + teach_behav + immigration:gender + 
+            + short_edu_mat + stu_behav + teach_behav +  
             + immigration:belonging + immigration:teacher_support + immigration:emo_sup + 
             + immigration:learn_time_read + immigration:class_size + 
             + immigration:short_edu_mat + immigration:short_edu_staff)
 summary(gm3)
 
-# finireeeeeee
+# Tolgo immigration:teacher_support
+gm3 <- lm(read ~ language + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + learn_time_read + 
+            + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:belonging + immigration:emo_sup + 
+            + immigration:learn_time_read + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff)
+summary(gm3)
+
+# Tolgo immigration:belonging
+gm3 <- lm(read ~ language + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + learn_time_read + 
+            + short_edu_mat + stu_behav + teach_behav + immigration:emo_sup + 
+            + immigration:learn_time_read + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff)
+summary(gm3)
+
+# Tolgo hisced 
+gm3 <- lm(read ~ language + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + learn_time_read + 
+            + short_edu_mat + stu_behav + teach_behav + immigration:emo_sup + 
+            + immigration:learn_time_read + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff)
+summary(gm3)
+
+# Tolgo emo_sup 
+gm3 <- lm(read ~ language + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + learn_time_read + 
+            + short_edu_mat + stu_behav + teach_behav + immigration:emo_sup + 
+            + immigration:learn_time_read + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff)
+summary(gm3)
+
+# Tolgo immigration:emo_sup
+gm3 <- lm(read ~ language + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + learn_time_read + 
+            + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:learn_time_read + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff)
+summary(gm3)
+
+# Tolgo grade_rep 
+gm3 <- lm(read ~ language + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + learn_time_read + 
+            + short_edu_mat + stu_behav + teach_behav +  
+            + immigration:learn_time_read + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff)
+summary(gm3)
+
+# Tolgo belonging 
+gm3 <- lm(read ~ language + fear_failure + bullied + ESCS_status + teacher_support + learn_time_read + 
+            + short_edu_mat + stu_behav + teach_behav + immigration:learn_time_read + immigration:class_size + 
+            + immigration:short_edu_mat + immigration:short_edu_staff)
+summary(gm3)
+
+x11()
+par(mfrow=c(2,2))
+plot(gm3)
+# ok
+
+shapiro.test(residuals(gm3))
+# pvalue = 0.00404
+
 #-------------------------------------------------------------------------------
 
 detach(studentsDataGBR)

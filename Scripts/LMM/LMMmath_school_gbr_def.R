@@ -216,5 +216,7 @@ studentsData_pos_schools <- studentsData[which(studentsData$school_id %in% pos_s
 summary(studentsData_neg_schools)
 summary(studentsData_pos_schools)
 
+# pacchetto multinom o vgam o nnet
+
 table(studentsData_neg_schools$private)
 table(studentsData_pos_schools$private)
