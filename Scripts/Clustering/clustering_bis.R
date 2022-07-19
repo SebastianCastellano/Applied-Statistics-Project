@@ -32,7 +32,6 @@ for(k in 1:10){
   w <- c(w, sum(result.k$wit))
   b <- c(b, result.k$bet)
 }
-x11()
 matplot(1:10, w/(w+b), pch='', xlab='clusters', ylab='within/tot', main='Choice of k', ylim=c(0,1))
 lines(1:10, w/(w+b), type='b', lwd=2)
 
@@ -62,7 +61,6 @@ for (i in 1:n_countries) {
   Y$cluster = clusters
   
   # Graphical Representation
-  x11()
   par(mfrow = c(2,2))
   boxplot(math~cluster, Y, col = "gold", main = name_countries[i])
   boxplot(learn_time_math~cluster, Y, col = "gold", main = name_countries[i])
