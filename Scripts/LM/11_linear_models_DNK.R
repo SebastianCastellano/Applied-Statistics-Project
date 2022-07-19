@@ -23,7 +23,7 @@ attach(studentsDataDNK)
 
 #-------------------------------------------------------------------------------
 
-# Solo variabili studente 
+# MATH - Solo variabili studente 
 
 gm4 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + school_changes +
@@ -132,7 +132,7 @@ shapiro.test(residuals(gm4))
 
 #-------------------------------------------------------------------------------
 
-# Tutte le variabili (no country) 
+# MATH - Tutte le variabili (no country) 
 
 gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
@@ -351,4 +351,131 @@ plot(gm3)
 
 shapiro.test(residuals(gm3))
 # pvalue = 0.0004476
+
+#-------------------------------------------------------------------------------
+
+# READ - Solo variabili studente 
+
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes +
+            + learn_time_read + immigration:gender + immigration:language + immigration:hisced + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + 
+            + immigration:school_changes + immigration:learn_time_read)
+summary(gm4)
+
+# Tolgo immigration:hisced 
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+            + ESCS_status + teacher_support + emo_sup + school_changes +
+            + learn_time_read + immigration:gender + immigration:language + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + 
+            + immigration:school_changes + immigration:learn_time_read)
+summary(gm4)
+
+# Tolgo bullied 
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes +
+            + learn_time_read + immigration:gender + immigration:language + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + 
+            + immigration:school_changes + immigration:learn_time_read)
+summary(gm4)
+
+# Tolgo immigration:learn_time_read
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes +
+            + learn_time_read + immigration:gender + immigration:language + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup + 
+            + immigration:school_changes)
+summary(gm4)
+
+# Tolgo immigration:school_changes
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes +
+            + learn_time_read + immigration:gender + immigration:language + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo immigration:gender 
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes +
+            + learn_time_read + immigration:language + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo immigration:language
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:teacher_support + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo immigration:teacher_support
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:belonging + immigration:bullied + 
+            + immigration:ESCS_status + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo immigration:belonging 
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:bullied + 
+            + immigration:ESCS_status + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo fear_failure
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:grade_rep + immigration:fear_failure + immigration:bullied + 
+            + immigration:ESCS_status + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo immigration:grade_rep
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:fear_failure + immigration:bullied + 
+            + immigration:ESCS_status + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo immigration:fear_failure 
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:bullied + immigration:ESCS_status + immigration:emo_sup)
+summary(gm4)
+
+# Tolgo immigration:emo_sup
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + belonging +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:bullied + immigration:ESCS_status)
+summary(gm4)
+
+# Tolgo belonging 
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:bullied + immigration:ESCS_status)
+summary(gm4)
+
+# Tolgo immigration:bullied 
+gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+            + immigration:ESCS_status)
+summary(gm4)
+
+#-------------------------------------------------------------------------------
+ 
+# READ - tutte le variabili 
+
+#-------------------------------------------------------------------------------
+
+detach(studentsDataDNK)
+
+
+
+
+
 
