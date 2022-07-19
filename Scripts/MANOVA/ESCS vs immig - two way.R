@@ -61,19 +61,19 @@ shapiro.test(sample(man.res,5000))$p #not super gaussian
 interact.groups <- interaction(X.groups1,X.groups2)
 bartlett.test(X.values,interact.groups.fact) # ok if pvalue big , here it is not
 #Boxplot the groups (graphical qualitative analysis)
-col <- c("red","green3","blue")
+col <- c("red","blue")
 #Math
 x11()
 par(mfrow=c(2,1), mar=c(2,4,2,2))
 boxplot(X.values[[1]]~X.groups1, main="Math", ylab = "Math", col=col)
-par(mar=c(3,4,2,2))
-boxplot(X.values[[1]]~X.groups2,ylab = "Math", las=3, col="gold")
+par(mar=c(5,4,2,2))
+boxplot(X.values[[1]]~X.groups2, ylab = "Math", xlab="ESCS quartiles", las=3, col="gold")
 #Read
 x11()
 par(mfrow=c(2,1), mar=c(2,4,2,2))
 boxplot(X.values[[2]]~X.groups1, main="Reading", ylab = "Reading", col=col)
-par(mar=c(3,4,2,2))
-boxplot(X.values[[2]]~X.groups2,ylab = "Reading", las=3, col="gold")
+par(mar=c(5,4,2,2))
+boxplot(X.values[[2]]~X.groups2, ylab = "Reading", xlab="ESCS quartiles", las=3, col="gold")
 # The variances look pretty comparable
 
 #b) Group means
@@ -87,11 +87,9 @@ row.names(read.mean) <- levels(X.groups1)
 read.mean 
 
 gap.math <- sort(math.mean[1,]-math.mean[2,])
-gap.scie <- sort(scie.mean[1,]-scie.mean[2,])
 gap.read <- sort(read.mean[1,]-read.mean[2,])
 x11(width = 18, height = 15)
-par(mfrow = c(3,1))
-barplot(as.matrix(gap.math), ylab = "Native vs 2nd gen. imm.", main = "MATH", col = "red")
-barplot(as.matrix(gap.scie), ylab = "Native vs  2nd gen. imm.", main = "SCIENCE", col = "green2")
-barplot(as.matrix(gap.read), ylab = "Native vs  2nd gen. imm.", main = "READING", col = "blue")
+par(mfrow = c(2,1))
+barplot(as.matrix(gap.math), ylab = "Native vs immig", xlab="ESCS quartiles", main = "MATH", col = "red")
+barplot(as.matrix(gap.read), ylab = "Native vs  immig", xlab="ESCS quartiles", main = "READING", col = "blue")
 

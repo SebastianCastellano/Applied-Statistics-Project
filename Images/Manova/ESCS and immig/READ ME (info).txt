@@ -1,0 +1,10 @@
+To assess if immigration effects on math/read scores are just masking
+the true reason which may be being poorer we perfrom a two way anova of
+ESCS_status (proxy of richness level) and immig.
+
+By observing that the interaction effect is not null we reject the hypothesis
+(great, fiuf).
+
+Moreover we can rank the quartiles of ESCS in which there are more differences
+in native/immig.
+Being richer (4th quartile) is better since there are the less differences.

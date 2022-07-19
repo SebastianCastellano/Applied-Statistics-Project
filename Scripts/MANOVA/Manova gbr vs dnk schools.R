@@ -1,3 +1,110 @@
+#a) Create school clusters through LMM
+#DNK
+library(MASS)
+library(car)
+library(rgl)
+
+library(nlmeU)
+library(corrplot)
+library(nlme)
+library(lattice)
+library(plot.matrix)
+library(lme4) #main package but only w/ resduals indep and homosk
+library(insight)
+
+library(ggplot2)
+
+#################
+### SCHOOL_ID ###
+#################
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
+studentsData= read.table(file = "student_dnk.txt", header = T)
+studentsData=na.omit(studentsData)
+
+studentsData$immigration[which(studentsData$immigration==1)] = 0;
+studentsData$immigration[which(studentsData$immigration==2 + I(studentsData$immigration==3))] = 1;
+table(studentsData$immigration)
+#studentsData$immigration= as.factor(studentsData$immigration)
+studentsData$school_id= as.factor(studentsData$school_id)
+
+#math
+
+##--------------##
+## Linear Model ##
+##--------------##
+# We start with a standard linear regression model, neglecting the dependence structure
+lm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
+            + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
+            + immigration:ESCS_status, data = studentsData)
+summary(lm1)
+
+
+## residuals differ a lot across schools
+
+#-----------------------------#
+# Linear Mixed Effects Models #
+#-----------------------------#
+# We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
+
+lmm1 = lmer(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
+              + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
+              + immigration:ESCS_status + (1|school_id), 
+            data = studentsData)
+summary(lmm1)
+
+#clustering
+rr <- ranef(lmm1)
+dd <- as.data.frame(rr)
+intervals <- transform(dd, lwr=condval-1.96*condsd, upr=condval+1.96*condsd)
+neg_schools <- intervals$grp[which(intervals$lwr<0 & intervals$upr<0)]
+pos_schools <- intervals$grp[which(intervals$lwr>0 & intervals$upr>0)]
+
+studentsData_neg_schools_dnk <- studentsData[which(studentsData$school_id %in% neg_schools),]
+studentsData_pos_schools_dnk <- studentsData[which(studentsData$school_id %in% pos_schools),]
+summary(studentsData_neg_schools_dnk)
+summary(studentsData_pos_schools_dnk)
+
+#GBR
+studentsData= read.table(file = "student_gbr.txt", header = T)
+studentsData=na.omit(studentsData)
+
+studentsData$immigration[which(studentsData$immigration==1)] = 0;
+studentsData$immigration[which(studentsData$immigration==2 + I(studentsData$immigration==3))] = 1;
+table(studentsData$immigration)
+#studentsData$immigration= as.factor(studentsData$immigration)
+studentsData$school_id= as.factor(studentsData$school_id)
+
+##--------------##
+## Linear Model ##
+##--------------##
+# We start with a standard linear regression model, neglecting the dependence structure
+lm1 <- lm(math ~ gender + hisced + fear_failure + bullied + ESCS_status + 
+            + learn_time_math, data = studentsData)
+summary(lm1)
+## residuals differ a lot across schools
+
+#-----------------------------#
+# Linear Mixed Effects Models #
+#-----------------------------#
+# We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
+
+lmm1 = lmer(math ~ gender + hisced + fear_failure + bullied + ESCS_status + 
+              + learn_time_math + (1|school_id), 
+            data = studentsData)
+summary(lmm1)
+
+rr <- ranef(lmm1)
+dd <- as.data.frame(rr)
+intervals <- transform(dd, lwr=condval-1.96*condsd, upr=condval+1.96*condsd)
+neg_schools <- intervals$grp[which(intervals$lwr<0 & intervals$upr<0)]
+pos_schools <- intervals$grp[which(intervals$lwr>0 & intervals$upr>0)]
+
+studentsData_neg_schools_gbr <- studentsData[which(studentsData$school_id %in% neg_schools),]
+studentsData_pos_schools_gbr <- studentsData[which(studentsData$school_id %in% pos_schools),]
+summary(studentsData_neg_schools_gbr)
+summary(studentsData_pos_schools_gbr)
+
+# Create dataframe sof interest
 school_neg_dnk <- data.frame(studentsData_neg_schools_dnk$fear_failure,
                          studentsData_neg_schools_dnk$belonging,
                          studentsData_neg_schools_dnk$bullied,

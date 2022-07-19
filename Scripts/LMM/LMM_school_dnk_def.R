@@ -16,7 +16,7 @@ library(ggplot2)
 #################
 ### SCHOOL_ID ###
 #################
-
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 studentsData= read.table(file = "student_dnk.txt", header = T)
 studentsData=na.omit(studentsData)
 
