@@ -20,15 +20,15 @@ name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX
 n_countries <- length(countries) 
 
 # MODIFY BELOW BASE ON SELECTED VARIABLE
-variable <- "READ LEARN TIME" #for print purposes
+variable <- "Belonging" #for print purposes
 variable_scores <- rep(0, n_countries) #will fill with native-immig mean scores for each country
 
 for (i in 1:n_countries) {
   
   # BUILD DATAFRAMES ----
   
-  X = data.frame(countries[[i]]$learn_time_read) # Change this according to variable of interest
-  names(X) = c("learn_time_read")
+  X = data.frame(countries[[i]]$belonging) # Change this according to variable of interest
+  names(X) = c("belonging")
   immStatus = countries[[i]]$immigration
 
   
@@ -121,7 +121,7 @@ for (i in 1:n_countries) {
   
   if(inf23[1]>0 || sup23[1]<0){
     print("1° Generation Immigrants - 2° Generation Immigrants")
-    # print(paste("Immig1 mean = ", m2[1]))
+    print(paste("Immig1 mean = ", m2[1]))
     print(paste("Immig2 mean = ", m3[1]))
     print(paste("p-value: ", pval23[1]))
   }
