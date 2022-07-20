@@ -36,7 +36,10 @@ matplot(1:10, w/(w+b), pch='', xlab='clusters', ylab='within/tot', main='Choice 
 lines(1:10, w/(w+b), type='b', lwd=2)
 
 k=3
-
+perc_immig <- as.data.frame(matrix(ncol=11,nrow=6))
+names(perc_immig) <- name_countries
+num_clusters <- as.data.frame(matrix(ncol=11,nrow=3))
+names(num_clusters) <- name_countries
 # How much the clustering reduces the entropy
 orderGain = rep(0,n_countries)
 for (i in 1:n_countries) {
@@ -60,63 +63,46 @@ for (i in 1:n_countries) {
   Y = X
   Y$cluster = clusters
   
+  
+  num_clusters[1,i] <- dim(CNT[which(clusters==1),])[1]
+  num_clusters[2,i] <- dim(CNT[which(clusters==2),])[1]
+  num_clusters[3,i] <- dim(CNT[which(clusters==3),])[1]
+  
+  tot_immig <- length(which(CNT$immigration==2 | CNT$immigration==3))
+  immig_1cl <- CNT$immigration[clusters==1]
+  immig_2cl <- CNT$immigration[clusters==2]
+  immig_3cl <- CNT$immigration[clusters==3]
+  immig1 <- length(which(immig_1cl==2 | immig_1cl==3))
+  immig2 <- length(which(immig_2cl==2 | immig_2cl==3))
+  immig3 <- length(which(immig_3cl==2 | immig_3cl==3))
+  perc_immig[1,i] = immig1/tot_immig
+  perc_immig[2,i] = immig2/tot_immig
+  perc_immig[3,i] = immig3/tot_immig
+  
+  
+  tot_native <- length(which(CNT$immigration==1))
+  native_1cl <- CNT$immigration[clusters==1]
+  native_2cl <- CNT$immigration[clusters==2]
+  native_3cl <- CNT$immigration[clusters==3]
+  native1 <- length(which(native_1cl==1))
+  native2 <- length(which(native_2cl==1))
+  native3 <- length(which(native_3cl==1))
+  perc_immig[4,i] = native1/tot_native
+  perc_immig[5,i] = native2/tot_native
+  perc_immig[6,i] = native3/tot_native
+  
   # Graphical Representation
   par(mfrow = c(2,2))
   boxplot(math~cluster, Y, col = "gold", main = name_countries[i])
   boxplot(read~cluster, Y, col = "gold", main = name_countries[i])
   boxplot(ESCS_status~cluster, Y, col = "gold", main = name_countries[i])
-  barplot(immigFrac, names.arg = c('1','2','3')
-          , ylim = c(0,1), main = 'Fraction of immigrants in each cluster')
+  barplot(perc_immig[1:3,i], names.arg = c('1','2','3')
+          , ylim = c(0,1), main = 'Percentage of immigrants in each cluster')
   boxplot(short_edu_staff~cluster, Y, col = "gold", main = name_countries[i])
   boxplot(short_edu_mat~cluster, Y, col = "gold", main = name_countries[i])
   boxplot(stu_behav~cluster, Y, col = "gold", main = name_countries[i])
   boxplot(teach_behav~cluster, Y, col = "gold", main = name_countries[i])
+ 
 }
 
-#EUR
-tot_immig <- length(which(EUR$immigration==2 | EUR$immigration==3))
-immig_1cl <- EUR$immigration[clusters==1]
-immig_2cl <- EUR$immigration[clusters==2]
-immig_3cl <- EUR$immigration[clusters==3]
-immig1 <- length(which(immig_1cl==2 | immig_1cl==3))
-immig2 <- length(which(immig_2cl==2 | immig_2cl==3))
-immig3 <- length(which(immig_3cl==2 | immig_3cl==3))
 
-num_immig1EUR = immig1/tot_immig
-num_immig1EUR
-num_immig2EUR = immig2/tot_immig
-num_immig2EUR
-num_immig3EUR = immig3/tot_immig
-num_immig3EUR
-
-#DNK
-tot_immig <- length(which(DNK$immigration==2 | DNK$immigration==3))
-immig_1cl <- DNK$immigration[clusters==1]
-immig_2cl <- DNK$immigration[clusters==2]
-immig_3cl <- DNK$immigration[clusters==3]
-immig1 <- length(which(immig_1cl==2 | immig_1cl==3))
-immig2 <- length(which(immig_2cl==2 | immig_2cl==3))
-immig3 <- length(which(immig_3cl==2 | immig_3cl==3))
-
-num_immig1DNK = immig1/tot_immig
-num_immig1DNK
-num_immig2DNK = immig2/tot_immig
-num_immig2DNK
-num_immig3DNK = immig3/tot_immig
-num_immig3DNK
-
-#GBR
-tot_immig <- length(which(GBR$immigration==2 | GBR$immigration==3))
-immig_1cl <- GBR$immigration[clusters==1]
-immig_2cl <- GBR$immigration[clusters==2]
-immig_3cl <- GBR$immigration[clusters==3]
-immig1 <- length(which(immig_1cl==2 | immig_1cl==3))
-immig2 <- length(which(immig_2cl==2 | immig_2cl==3))
-immig3 <- length(which(immig_3cl==2 | immig_3cl==3))
-
-num_immig1GBR = immig1/tot_immig
-num_immig1GBR
-num_immig2GBR = immig2/tot_immig
-num_immig2GBR
-num_immig3GBR = immig3/tot_immig
-num_immig3GBR
