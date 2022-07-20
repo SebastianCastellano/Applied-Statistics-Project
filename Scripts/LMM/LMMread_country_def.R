@@ -143,7 +143,17 @@ summary(lmm2)
 confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
 fixef(lmm2)
 
-# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's 0.16. 
+#non significtaivo immigration:grade_rep
+lmm2 = lmer(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
+              + ESCS_status + teacher_support + emo_sup + learn_time_read + 
+              + immigration:fear_failure + immigration:belonging +  
+              + immigration:teacher_support + immigration:emo_sup + (1 + immigration|country), 
+            data = studentsData)
+summary(lmm2)
+
+confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
+fixef(lmm2)
+# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's -0.29. 
 # That's pretty small, but the interpretation is the same as with any correlation. 
 
 # Variance components
@@ -155,7 +165,7 @@ sigma2_b <- as.numeric(get_variance_random(lmm2))  ## it automatically computes 
 sigma2_b
 
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.02574573
+PVRE #0.01839689
 
 # Estimates of fixed and random effects
 
@@ -232,7 +242,7 @@ anova(lmm1, lmm2)
 ## we fit a new model with a diagonal D matrix
 lmm3 <- lmer(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
                + ESCS_status + teacher_support + emo_sup + learn_time_read + 
-               + immigration:grade_rep + immigration:fear_failure + immigration:belonging +  
+               + immigration:fear_failure + immigration:belonging +  
                + immigration:teacher_support + immigration:emo_sup + (1|country) + (0 + immigration|country),
                    data = studentsData, control=lmerControl(optimizer="bobyqa",
                                                     optCtrl=list(maxfun=2e5)))
@@ -248,7 +258,7 @@ sigma2_b <- as.numeric(get_variance_random(lmm3)) + as.numeric(get_variance_slop
 sigma2_b
 
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.04398689
+PVRE #0.04293131
 
 ## visualization of the random intercepts with their 95% confidence intervals
 dotplot(ranef(lmm3, condVar=T))
@@ -259,5 +269,4 @@ ranef(lmm3, condVar=T)
 # The anova function, when given two or more arguments representing fitted models,
 # produces likelihood ratio tests comparing the models.
 anova(lmm2, lmm3)
-
 #according to the p-values the two models are essentially the same, so we choose the one with lower AIC (lmm3)

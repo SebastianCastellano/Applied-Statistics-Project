@@ -26,12 +26,12 @@ table(studentsData$immigration)
 #studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 
-#math
+#read
 x11()
-ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(school_id))) +
+ggplot(data=studentsData, aes(x=as.factor(school_id), y=read, fill=as.factor(school_id))) +
   geom_boxplot() +
-  labs(x='school_id', y='Math Achievement') +
-  ggtitle('Boxplot of math achievements among countries') +
+  labs(x='school_id', y='Read Achievement') +
+  ggtitle('Boxplot of read achievements among countries') +
   theme_minimal() +
   theme(axis.text=element_text(size=rel(1.15)),axis.title=element_text(size=rel(1.5)),
         plot.title = element_text(face="bold", size=rel(1.75)), legend.text = element_text(size=rel(1.15)),
@@ -42,10 +42,11 @@ ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(sch
 ## Linear Model ##
 ##--------------##
 # We start with a standard linear regression model, neglecting the dependence structure
-lm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
-            + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
+lm1 <- lm(read ~ gender + immigration + language + hisced + grade_rep +  
+            + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
             + immigration:ESCS_status, data = studentsData)
 summary(lm1)
+
 
 
 plot(lm1$residuals)
@@ -56,10 +57,10 @@ boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData
 #-----------------------------#
 # Linear Mixed Effects Models #
 #-----------------------------#
-# We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
+# We now take into account the clustering at school --> dependency among students within the same school_id
 
-lmm1 = lmer(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
-              + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
+lmm1 = lmer(read ~ gender + immigration + language + hisced + grade_rep +  
+              + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
               + immigration:ESCS_status + (1|school_id), 
             data = studentsData)
 summary(lmm1)
@@ -67,8 +68,7 @@ summary(lmm1)
 
 # Fixed Effects and 95% CIs
 #-------------------------------
-confint(lmm1, oldNames=TRUE) #hisced e learn_time_math non significant al 95% probabilmente al 99% si
-#forse meglio rifare modello senza
+confint(lmm1, oldNames=TRUE)
 fixef(lmm1)
 
 # Variance components
@@ -81,7 +81,7 @@ sigma2_b
 
 #Percentage of Variance explained by the Random Effect (PVRE).
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.06458919
+PVRE #0.05410083
 
 # Random effects: b_0i
 #----------------------------
@@ -137,8 +137,8 @@ qqline(unlist(ranef(lmm1)$school_id), col='red', lwd=2)
 #--------------------------------------------------#
 graphics.off()
 
-lmm2 = lmer(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
-              + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
+lmm2 = lmer(read ~ gender + immigration + language + hisced + grade_rep +  
+              + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
               + immigration:ESCS_status + (1 + immigration|school_id), 
             data = studentsData)
 summary(lmm2)
@@ -146,7 +146,7 @@ summary(lmm2)
 confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
 fixef(lmm2)
 
-# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's 0.16. 
+# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's -0.03. 
 # That's pretty small, but the interpretation is the same as with any correlation. 
 
 # Variance components
@@ -158,7 +158,7 @@ sigma2_b <- as.numeric(get_variance_random(lmm2))  ## it automatically computes 
 sigma2_b
 
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.06947605
+PVRE #0.0637712
 
 # Estimates of fixed and random effects
 
@@ -228,12 +228,13 @@ abline(v=0,h=0)
 
 # Comparing models
 anova(lmm1, lmm2)
+#the two models are essentially the same, lmm2 has a slightly less AIC
 
 
 ## We observe that the correlation between d_11 and d_22 id very low, 
 ## we fit a new model with a diagonal D matrix
-lmm3 <- lmer(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
-               + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
+lmm3 <- lmer(read ~ gender + immigration + language + hisced + grade_rep +  
+               + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
                + immigration:ESCS_status + (1|school_id) + (0 + immigration|school_id),
              data = studentsData, control=lmerControl(optimizer="bobyqa",
                                                       optCtrl=list(maxfun=2e5)))
@@ -249,7 +250,7 @@ sigma2_b <- as.numeric(get_variance_random(lmm3)) + as.numeric(get_variance_slop
 sigma2_b
 
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.09374256
+PVRE #0.1208163
 
 ## visualization of the random intercepts with their 95% confidence intervals
 dotplot(ranef(lmm3, condVar=T))
@@ -260,21 +261,7 @@ ranef(lmm3, condVar=T)
 # The anova function, when given two or more arguments representing fitted models,
 # produces likelihood ratio tests comparing the models.
 anova(lmm2, lmm3)
-anova(lmm2, lmm3) #forse meglio comunque il modello 1
-#according to the p-values the two models are essentially the same, so we choose the one with lower AIC (lmm3)
-
-
-
-#clustering
-rr <- ranef(lmm1)
-dd <- as.data.frame(rr)
-intervals <- transform(dd, lwr=condval-1.96*condsd, upr=condval+1.96*condsd)
-neg_schools <- intervals$grp[which(intervals$lwr<0 & intervals$upr<0)]
-pos_schools <- intervals$grp[which(intervals$lwr>0 & intervals$upr>0)]
-
-studentsData_neg_schools <- studentsData[which(studentsData$school_id %in% neg_schools),]
-studentsData_pos_schools <- studentsData[which(studentsData$school_id %in% pos_schools),]
-summary(studentsData_neg_schools)
-summary(studentsData_pos_schools)
+anova(lmm1, lmm3)
+#according to the p-values the models are essentially the same, so we choose the one with lower AIC (lmm3)
 
 

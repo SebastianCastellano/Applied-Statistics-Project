@@ -145,7 +145,7 @@ summary(lmm2)
 confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
 fixef(lmm2)
 
-# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's 0.16. 
+# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's -0.22. 
 # That's pretty small, but the interpretation is the same as with any correlation. 
 
 # Variance components

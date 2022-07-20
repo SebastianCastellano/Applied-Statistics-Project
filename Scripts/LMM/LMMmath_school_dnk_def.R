@@ -56,7 +56,7 @@ boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData
 #-----------------------------#
 # Linear Mixed Effects Models #
 #-----------------------------#
-# We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
+# We now take into account the clustering at school --> dependency among students within the same school_id
 
 lmm1 = lmer(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
               + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
@@ -67,8 +67,7 @@ summary(lmm1)
 
 # Fixed Effects and 95% CIs
 #-------------------------------
-confint(lmm1, oldNames=TRUE) #hisced e learn_time_math non significant al 95% probabilmente al 99% si
-#forse meglio rifare modello senza
+confint(lmm1, oldNames=TRUE)
 fixef(lmm1)
 
 # Variance components
@@ -85,7 +84,7 @@ PVRE #0.06458919
 
 # Random effects: b_0i
 #----------------------------
-ranef(lmm1) #uso per clustering
+ranef(lmm1)
 
 x11()
 dotplot(ranef(lmm1))
@@ -143,10 +142,10 @@ lmm2 = lmer(math ~ gender + immigration + language + hisced + grade_rep + fear_f
             data = studentsData)
 summary(lmm2)
 
-confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
+confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione
 fixef(lmm2)
 
-# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's 0.16. 
+# Yet another point of interest is the correlation of the intercepts and slopes. In this case it's -0.13. 
 # That's pretty small, but the interpretation is the same as with any correlation. 
 
 # Variance components
@@ -228,7 +227,7 @@ abline(v=0,h=0)
 
 # Comparing models
 anova(lmm1, lmm2)
-
+#the two models are essentially the same, lmm1 has a slightly less AIC
 
 ## We observe that the correlation between d_11 and d_22 id very low, 
 ## we fit a new model with a diagonal D matrix
@@ -260,21 +259,6 @@ ranef(lmm3, condVar=T)
 # The anova function, when given two or more arguments representing fitted models,
 # produces likelihood ratio tests comparing the models.
 anova(lmm2, lmm3)
-anova(lmm2, lmm3) #forse meglio comunque il modello 1
-#according to the p-values the two models are essentially the same, so we choose the one with lower AIC (lmm3)
-
-
-
-#clustering
-rr <- ranef(lmm1)
-dd <- as.data.frame(rr)
-intervals <- transform(dd, lwr=condval-1.96*condsd, upr=condval+1.96*condsd)
-neg_schools <- intervals$grp[which(intervals$lwr<0 & intervals$upr<0)]
-pos_schools <- intervals$grp[which(intervals$lwr>0 & intervals$upr>0)]
-
-studentsData_neg_schools <- studentsData[which(studentsData$school_id %in% neg_schools),]
-studentsData_pos_schools <- studentsData[which(studentsData$school_id %in% pos_schools),]
-summary(studentsData_neg_schools)
-summary(studentsData_pos_schools)
-
+anova(lmm1, lmm3)
+#according to the p-values the two models are essentially the same, so we choose the one with lower AIC (lmm1)
 

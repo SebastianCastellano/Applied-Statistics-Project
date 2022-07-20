@@ -26,12 +26,12 @@ table(studentsData$immigration)
 #studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 
-#math
+#read
 x11()
-ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(school_id))) +
+ggplot(data=studentsData, aes(x=as.factor(school_id), y=read, fill=as.factor(school_id))) +
   geom_boxplot() +
-  labs(x='school_id', y='Math Achievement') +
-  ggtitle('Boxplot of math achievements among countries') +
+  labs(x='school_id', y='Read Achievement') +
+  ggtitle('Boxplot of read achievements among countries') +
   theme_minimal() +
   theme(axis.text=element_text(size=rel(1.15)),axis.title=element_text(size=rel(1.5)),
         plot.title = element_text(face="bold", size=rel(1.75)), legend.text = element_text(size=rel(1.15)),
@@ -42,8 +42,9 @@ ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(sch
 ## Linear Model ##
 ##--------------##
 # We start with a standard linear regression model, neglecting the dependence structure
-lm1 <- lm(math ~ gender + hisced + fear_failure + bullied + ESCS_status + 
-            + learn_time_math, data = studentsData)
+lm1 <- lm(read ~ fear_failure + bullied + 
+            + ESCS_status + teacher_support + learn_time_read + immigration:gender + 
+            + immigration:language + immigration:learn_time_read, data = studentsData)
 summary(lm1)
 
 plot(lm1$residuals)
@@ -54,18 +55,31 @@ boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData
 #-----------------------------#
 # Linear Mixed Effects Models #
 #-----------------------------#
-# We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
+# We now take into account the clustering at school --> dependency among students within the same school_id
 
-lmm1 = lmer(math ~ gender + hisced + fear_failure + bullied + ESCS_status + 
-              + learn_time_math + (1|school_id), 
+lmm1 = lmer(read ~ fear_failure + bullied + 
+              + ESCS_status + teacher_support + learn_time_read + immigration:gender + 
+              + immigration:language + immigration:learn_time_read + (1|school_id), 
             data = studentsData)
 summary(lmm1)
 
 
 # Fixed Effects and 95% CIs
 #-------------------------------
-confint(lmm1, oldNames=TRUE) #hisced e learn_time_math non significant al 95% probabilmente al 99% si
-#forse meglio rifare modello senza
+confint(lmm1, oldNames=TRUE)
+fixef(lmm1)
+
+#immigration:gender e learn_time_read:immigration non significative
+lmm1 = lmer(read ~ fear_failure + bullied + 
+              + ESCS_status + teacher_support + learn_time_read + 
+              + immigration:language + (1|school_id), 
+            data = studentsData)
+summary(lmm1)
+
+
+# Fixed Effects and 95% CIs
+#-------------------------------
+confint(lmm1, oldNames=TRUE)
 fixef(lmm1)
 
 # Variance components
@@ -78,7 +92,7 @@ sigma2_b
 
 #Percentage of Variance explained by the Random Effect (PVRE).
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.135587
+PVRE #0.1068563
 
 # Random effects: b_0i
 #----------------------------
@@ -128,17 +142,4 @@ qqnorm(unlist(ranef(lmm1)$school_id), main='Normal Q-Q Plot - Random Effects for
 qqline(unlist(ranef(lmm1)$school_id), col='red', lwd=2)
 
 
-#clustering
-rr <- ranef(lmm1)
-dd <- as.data.frame(rr)
-intervals <- transform(dd, lwr=condval-1.96*condsd, upr=condval+1.96*condsd)
-neg_schools <- intervals$grp[which(intervals$lwr<0 & intervals$upr<0)]
-pos_schools <- intervals$grp[which(intervals$lwr>0 & intervals$upr>0)]
 
-studentsData_neg_schools <- studentsData[which(studentsData$school_id %in% neg_schools),]
-studentsData_pos_schools <- studentsData[which(studentsData$school_id %in% pos_schools),]
-summary(studentsData_neg_schools)
-summary(studentsData_pos_schools)
-
-table(studentsData_neg_schools$private)
-table(studentsData_pos_schools$private)

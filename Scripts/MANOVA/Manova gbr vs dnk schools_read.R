@@ -28,33 +28,20 @@ table(studentsData$immigration)
 #studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 
-#math
-
-##--------------##
-## Linear Model ##
-##--------------##
-# We start with a standard linear regression model, neglecting the dependence structure
-lm1 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
-            + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
-            + immigration:ESCS_status, data = studentsData)
-summary(lm1)
-
-
-## residuals differ a lot across schools
 
 #-----------------------------#
 # Linear Mixed Effects Models #
 #-----------------------------#
-# We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
+lmm3 <- lmer(read ~ gender + immigration + language + hisced + grade_rep +  
+               + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
+               + immigration:ESCS_status + (1|school_id) + (0 + immigration|school_id),
+             data = studentsData, control=lmerControl(optimizer="bobyqa",
+                                                      optCtrl=list(maxfun=2e5)))
 
-lmm1 = lmer(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + 
-              + ESCS_status + teacher_support + school_changes + learn_time_math + immigration:language + 
-              + immigration:ESCS_status + (1|school_id), 
-            data = studentsData)
-summary(lmm1)
+summary(lmm3)
 
 #clustering
-rr <- ranef(lmm1)
+rr <- ranef(lmm3)
 dd <- as.data.frame(rr)
 intervals <- transform(dd, lwr=condval-1.96*condsd, upr=condval+1.96*condsd)
 neg_schools <- intervals$grp[which(intervals$lwr<0 & intervals$upr<0)]
@@ -78,22 +65,15 @@ table(studentsData$immigration)
 #studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 
-##--------------##
-## Linear Model ##
-##--------------##
-# We start with a standard linear regression model, neglecting the dependence structure
-lm1 <- lm(math ~ gender + hisced + fear_failure + bullied + ESCS_status + 
-            + learn_time_math, data = studentsData)
-summary(lm1)
-## residuals differ a lot across schools
 
 #-----------------------------#
 # Linear Mixed Effects Models #
 #-----------------------------#
 # We now take into account the clustering at primary studentsData --> dependency among students within the same studentsData
 
-lmm1 = lmer(math ~ gender + hisced + fear_failure + bullied + ESCS_status + 
-              + learn_time_math + (1|school_id), 
+lmm1 = lmer(read ~ fear_failure + bullied + 
+              + ESCS_status + teacher_support + learn_time_read + 
+              + immigration:language + (1|school_id), 
             data = studentsData)
 summary(lmm1)
 
@@ -114,51 +94,6 @@ summary(studentsData_neut_schools_gbr)
 
 # Create dataframe sof interest
 school_neg_dnk <- data.frame(studentsData_neg_schools_dnk$fear_failure,
-                         studentsData_neg_schools_dnk$belonging,
-                         studentsData_neg_schools_dnk$bullied,
-                         studentsData_neg_schools_dnk$teacher_support,
-                         studentsData_neg_schools_dnk$emo_sup,
-                         studentsData_neg_schools_dnk$class_size,
-                         studentsData_neg_schools_dnk$stud_teach_ratio,
-                         studentsData_neg_schools_dnk$short_edu_mat,
-                         studentsData_neg_schools_dnk$short_edu_staff,
-                         studentsData_neg_schools_dnk$stu_behav,
-                         studentsData_neg_schools_dnk$teach_behav,
-                         studentsData_neg_schools_dnk$ESCS_status,
-                         studentsData_neg_schools_dnk$immigration,
-                         group = -1 )
-
-school_pos_dnk <- data.frame(studentsData_pos_schools_dnk$fear_failure,
-                         studentsData_pos_schools_dnk$belonging,
-                         studentsData_pos_schools_dnk$bullied,
-                         studentsData_pos_schools_dnk$teacher_support,
-                         studentsData_pos_schools_dnk$emo_sup,
-                         studentsData_pos_schools_dnk$class_size,
-                         studentsData_pos_schools_dnk$stud_teach_ratio,
-                         studentsData_pos_schools_dnk$short_edu_mat,
-                         studentsData_pos_schools_dnk$short_edu_staff,
-                         studentsData_pos_schools_dnk$stu_behav,
-                         studentsData_pos_schools_dnk$teach_behav,
-                         studentsData_pos_schools_dnk$ESCS_status,
-                         studentsData_pos_schools_dnk$immigration,
-                         group = 1)
-
-school_neut_dnk <- data.frame(studentsData_pos_schools_dnk$fear_failure,
-                             studentsData_pos_schools_dnk$belonging,
-                             studentsData_pos_schools_dnk$bullied,
-                             studentsData_pos_schools_dnk$teacher_support,
-                             studentsData_pos_schools_dnk$emo_sup,
-                             studentsData_pos_schools_dnk$class_size,
-                             studentsData_pos_schools_dnk$stud_teach_ratio,
-                             studentsData_pos_schools_dnk$short_edu_mat,
-                             studentsData_pos_schools_dnk$short_edu_staff,
-                             studentsData_pos_schools_dnk$stu_behav,
-                             studentsData_pos_schools_dnk$teach_behav,
-                             studentsData_pos_schools_dnk$ESCS_status,
-                             studentsData_pos_schools_dnk$immigration,
-                             group = 0)
-
-school_neg_gbr <- data.frame(studentsData_neg_schools_dnk$fear_failure,
                              studentsData_neg_schools_dnk$belonging,
                              studentsData_neg_schools_dnk$bullied,
                              studentsData_neg_schools_dnk$teacher_support,
@@ -171,6 +106,51 @@ school_neg_gbr <- data.frame(studentsData_neg_schools_dnk$fear_failure,
                              studentsData_neg_schools_dnk$teach_behav,
                              studentsData_neg_schools_dnk$ESCS_status,
                              studentsData_neg_schools_dnk$immigration,
+                             group = -1 )
+
+school_pos_dnk <- data.frame(studentsData_pos_schools_dnk$fear_failure,
+                             studentsData_pos_schools_dnk$belonging,
+                             studentsData_pos_schools_dnk$bullied,
+                             studentsData_pos_schools_dnk$teacher_support,
+                             studentsData_pos_schools_dnk$emo_sup,
+                             studentsData_pos_schools_dnk$class_size,
+                             studentsData_pos_schools_dnk$stud_teach_ratio,
+                             studentsData_pos_schools_dnk$short_edu_mat,
+                             studentsData_pos_schools_dnk$short_edu_staff,
+                             studentsData_pos_schools_dnk$stu_behav,
+                             studentsData_pos_schools_dnk$teach_behav,
+                             studentsData_pos_schools_dnk$ESCS_status,
+                             studentsData_pos_schools_dnk$immigration,
+                             group = 1)
+
+school_neut_dnk <- data.frame(studentsData_neut_schools_dnk$fear_failure,
+                              studentsData_neut_schools_dnk$belonging,
+                              studentsData_neut_schools_dnk$bullied,
+                              studentsData_neut_schools_dnk$teacher_support,
+                              studentsData_neut_schools_dnk$emo_sup,
+                              studentsData_neut_schools_dnk$class_size,
+                              studentsData_neut_schools_dnk$stud_teach_ratio,
+                              studentsData_neut_schools_dnk$short_edu_mat,
+                              studentsData_neut_schools_dnk$short_edu_staff,
+                              studentsData_neut_schools_dnk$stu_behav,
+                              studentsData_neut_schools_dnk$teach_behav,
+                              studentsData_neut_schools_dnk$ESCS_status,
+                              studentsData_neut_schools_dnk$immigration,
+                              group = 0)
+
+school_neg_gbr <- data.frame(studentsData_neg_schools_gbr$fear_failure,
+                             studentsData_neg_schools_gbr$belonging,
+                             studentsData_neg_schools_gbr$bullied,
+                             studentsData_neg_schools_gbr$teacher_support,
+                             studentsData_neg_schools_gbr$emo_sup,
+                             studentsData_neg_schools_gbr$class_size,
+                             studentsData_neg_schools_gbr$stud_teach_ratio,
+                             studentsData_neg_schools_gbr$short_edu_mat,
+                             studentsData_neg_schools_gbr$short_edu_staff,
+                             studentsData_neg_schools_gbr$stu_behav,
+                             studentsData_neg_schools_gbr$teach_behav,
+                             studentsData_neg_schools_gbr$ESCS_status,
+                             studentsData_neg_schools_gbr$immigration,
                              group = -1 )
 
 school_pos_gbr <- data.frame(studentsData_pos_schools_gbr$fear_failure,
@@ -188,20 +168,20 @@ school_pos_gbr <- data.frame(studentsData_pos_schools_gbr$fear_failure,
                              studentsData_pos_schools_gbr$immigration,
                              group = 1)
 
-school_neut_gbr <- data.frame(studentsData_neg_schools_gbr$fear_failure,
-                             studentsData_neg_schools_gbr$belonging,
-                             studentsData_neg_schools_gbr$bullied,
-                             studentsData_neg_schools_gbr$teacher_support,
-                             studentsData_neg_schools_gbr$emo_sup,
-                             studentsData_neg_schools_gbr$class_size,
-                             studentsData_neg_schools_gbr$stud_teach_ratio,
-                             studentsData_neg_schools_gbr$short_edu_mat,
-                             studentsData_neg_schools_gbr$short_edu_staff,
-                             studentsData_neg_schools_gbr$stu_behav,
-                             studentsData_neg_schools_gbr$teach_behav,
-                             studentsData_neg_schools_gbr$ESCS_status,
-                             studentsData_neg_schools_gbr$immigration,
-                             group = 0 )
+school_neut_gbr <- data.frame(studentsData_neut_schools_gbr$fear_failure,
+                              studentsData_neut_schools_gbr$belonging,
+                              studentsData_neut_schools_gbr$bullied,
+                              studentsData_neut_schools_gbr$teacher_support,
+                              studentsData_neut_schools_gbr$emo_sup,
+                              studentsData_neut_schools_gbr$class_size,
+                              studentsData_neut_schools_gbr$stud_teach_ratio,
+                              studentsData_neut_schools_gbr$short_edu_mat,
+                              studentsData_neut_schools_gbr$short_edu_staff,
+                              studentsData_neut_schools_gbr$stu_behav,
+                              studentsData_neut_schools_gbr$teach_behav,
+                              studentsData_neut_schools_gbr$ESCS_status,
+                              studentsData_neut_schools_gbr$immigration,
+                              group = 0 )
 
 table(studentsData_neg_schools_gbr$immigration)
 table(studentsData_pos_schools_gbr$immigration)
