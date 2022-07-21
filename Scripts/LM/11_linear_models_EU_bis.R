@@ -97,6 +97,11 @@ gm4 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belongin
             + immigration:emo_sup)
 summary(gm4)
 
+x11()
+par(mfrow=c(2,2))
+plot(gm4)
+# ok
+
 #-------------------------------------------------------------------------------
 # MATH - Tutte le variabili (no country)
 #-------------------------------------------------------------------------------
@@ -183,6 +188,11 @@ gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belongin
             + immigration:short_edu_mat + immigration:short_edu_staff + immigration:stu_behav)
 summary(gm3)
 
+x11()
+par(mfrow=c(2,2))
+plot(gm3)
+# ok
+
 #-------------------------------------------------------------------------------
 # READ - Solo variabili studente 
 #-------------------------------------------------------------------------------
@@ -237,6 +247,11 @@ gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_fai
             + immigration:grade_rep + immigration:fear_failure + immigration:belonging +  
             + immigration:teacher_support + immigration:emo_sup)
 summary(gm4)
+
+x11()
+par(mfrow=c(2,2))
+plot(gm4)
+# ok
 
 #-------------------------------------------------------------------------------
 # READ - Tutte le variabili (no country)

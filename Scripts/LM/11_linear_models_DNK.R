@@ -466,6 +466,11 @@ gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep +
             + immigration:ESCS_status)
 summary(gm4)
 
+x11()
+par(mfrow=c(2,2))
+plot(gm4)
+# ok
+
 #-------------------------------------------------------------------------------
 # READ - Tutte le variabili 
 #-------------------------------------------------------------------------------
