@@ -22,10 +22,8 @@ table(studentsDataEU$immigration)
 attach(studentsDataEU)
 
 #-------------------------------------------------------------------------------
-## Modello per MATH con tutte tutte le variabili 
+# MATH - Solo variabili studente 
 #-------------------------------------------------------------------------------
-
-# variabili studente 
 
 gm4 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + 
@@ -100,8 +98,8 @@ gm4 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belongin
 summary(gm4)
 
 #-------------------------------------------------------------------------------
-
-# tutte le variabili (no country)
+# MATH - Tutte le variabili (no country)
+#-------------------------------------------------------------------------------
 
 gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + 
@@ -186,10 +184,8 @@ gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + belongin
 summary(gm3)
 
 #-------------------------------------------------------------------------------
-## Modello per READ con tutte tutte le variabili 
+# READ - Solo variabili studente 
 #-------------------------------------------------------------------------------
-
-# variabili studente 
 
 gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + learn_time_read + 
@@ -243,8 +239,8 @@ gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_fai
 summary(gm4)
 
 #-------------------------------------------------------------------------------
-
-# READ - tutte le variabili 
+# READ - Tutte le variabili (no country)
+#-------------------------------------------------------------------------------
 
 gm3 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + 

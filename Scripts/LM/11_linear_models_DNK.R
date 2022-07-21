@@ -22,8 +22,8 @@ table(studentsDataDNK$immigration)
 attach(studentsDataDNK)
 
 #-------------------------------------------------------------------------------
-
 # MATH - Solo variabili studente 
+#-------------------------------------------------------------------------------
 
 gm4 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + school_changes +
@@ -131,8 +131,8 @@ shapiro.test(residuals(gm4))
 # pvalue = 0.00115
 
 #-------------------------------------------------------------------------------
-
-# MATH - Tutte le variabili (no country) 
+# MATH - Tutte le variabili
+#-------------------------------------------------------------------------------
 
 gm3 <- lm(math ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_math + 
@@ -353,8 +353,8 @@ shapiro.test(residuals(gm3))
 # pvalue = 0.0004476
 
 #-------------------------------------------------------------------------------
-
 # READ - Solo variabili studente 
+#-------------------------------------------------------------------------------
 
 gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + school_changes +
@@ -467,8 +467,8 @@ gm4 <- lm(read ~ gender + immigration + language + hisced + grade_rep +
 summary(gm4)
 
 #-------------------------------------------------------------------------------
- 
 # READ - Tutte le variabili 
+#-------------------------------------------------------------------------------
 
 gm3 <- lm(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
             + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
