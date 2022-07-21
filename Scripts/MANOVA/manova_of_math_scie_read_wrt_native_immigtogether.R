@@ -3,6 +3,7 @@ library(MASS)
 load('mcshapiro.test.RData')
 
 #Import datasets
+setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features")
 ITA <- read.table(file = "student_ita.txt", header = T)
 AUT <- read.table(file = "student_aut.txt", header = T)
 BEL <- read.table(file = "student_bel.txt", header = T)
@@ -26,6 +27,9 @@ m_scores <- rep(0, n_countries)
 s_scores <- rep(0, n_countries)
 r_scores <- rep(0, n_countries)
 
+mean_matrix <- as.data.frame(matrix(ncol = 11, nrow = 4),row.names = c("math_native","math_immig",
+                                                                       "read_native","read_immig"))
+names(mean_matrix) <- name_countries
 
 for (i in 1:n_countries) {
   
@@ -83,6 +87,10 @@ for (i in 1:n_countries) {
   m  <- sapply(X,mean)         # estimates mu
   m1 <- sapply(X[nativeIndex,],mean)    # estimates mu.1=mu+tau.1 
   m2 <- sapply(X_imm, mean)
+  mean_matrix[1,i] <- m1[1]
+  mean_matrix[2,i] <- m2[1]
+  mean_matrix[3,i] <- m1[3]
+  mean_matrix[4,i] <- m2[3]
   
   #Intervals for native vs immig
   inf12 <- m1-m2 - qT * sqrt( diag(W)/(n-g) * (1/n1+1/n2) )
@@ -138,19 +146,97 @@ s_rank = name_countries[s_order]
 r_rank = name_countries[r_order]
 
 # GRAPHICAL VISUALIZATION ----
+#Plot math:
 x11(width = 18, height = 15)
-par(mfrow = c(3,1))
+par(mfrow = c(1,1),mar = c(5, 4, 4, 4) + 0.3)
+#Barplot
+bp <- barplot(sort(m_scores)[-11], names.arg = m_rank[-11], xlab ="Countries",
+        ylab = "Native vs IMM", main = "MATH", col = "firebrick3")
+yl <- 0.10
+barplot(sort(m_scores)[-11], names.arg = m_rank[-11], col = "coral1",main = "Math - Native and Immigrant", 
+        border = "NA",ylim = c(0,0.12), ylab = "Mean % decrease in score of immig students", cex.names = 0.9)
+#Points
+math_native <- t(mean_matrix[1,m_order])[-11]
+math_native_adapted <- (math_native-450)/100*yl
+math_immig <- t(mean_matrix[2,m_order])[-11]
+math_immig_adapted <- (math_immig-450)/100*yl
+
+points(bp,math_native_adapted,  pch=15, cex= 1.5, col="red3")
+points(bp,math_native_adapted,  pch=0, cex= 1.5)
+axis(side=4, at = seq(0,100, by=20)/100*yl, labels =seq(450,550,by=20), las=1)
+mtext("Scores", side=4, line=3)
+points(bp,math_immig_adapted, pch=16, cex =1.5, col="yellow")
+points(bp,math_immig_adapted, pch=1, cex =1.5)
+legend("top", 
+       pch = c(15,16),
+       legend = c("Native", "Immigrant"), 
+       col = c("red3", "yellow"))
+segments(bp, math_native_adapted, x1 = bp, y1 = math_immig_adapted, lty="dotted", col="gray32")
+
+#READING
+#Plot read:
+x11(width = 18, height = 15)
+par(mfrow = c(1,1),mar = c(5, 4, 4, 4) + 0.3)
+#Barplot
+bp <- barplot(sort(r_scores)[-11])
+yl <- 0.10
+barplot(sort(r_scores)[-11], names.arg = r_rank[-11], col = "lightskyblue",main = "Reading - Native and Immigrant", 
+        border = "NA", ylab = "Mean % decrease in score of immig students", cex.names = 0.9)
+#Points
+read_native <- t(mean_matrix[3,r_order])[-11]
+read_native_adapted <- (read_native-450)/100*yl
+read_immig <- t(mean_matrix[4,r_order])[-11]
+read_immig_adapted <- (read_immig-450)/100*yl
+
+points(bp,read_native_adapted,  pch=15, cex= 1.5, col="dodgerblue3")
+points(bp,read_native_adapted,  pch=0, cex= 1.5)
+axis(side=4, at = seq(0,100, by=20)/100*yl, labels =seq(450,550,by=20), las=1)
+mtext("Scores", side=4, line=3)
+points(bp,read_immig_adapted, pch=16, cex =1.5, col="aliceblue")
+points(bp,read_immig_adapted, pch=1, cex =1.5)
+legend("top", 
+       pch = c(15,16),
+       legend = c("Native", "Immigrant"), 
+       col = c("dodgerblue3", "aliceblue"))
+segments(bp, read_native_adapted, x1 = bp, y1 = read_immig_adapted, lty="dotted", col="gray32")
+
+
+
+ymax <- max(m_scores) * 1.05
+par(mar=c(4.1,5.1,2.1,5.1))
+bp <- barplot(sort(m_scores), col = "red", border = "NA", ylab = "Native - Immig scores")
+
+barplot(sort(m_scores), col = "red", border = "NA", ylab = "Native - Immig scores")
+
+abline(v = bp, col = "red", lwd = 2.5)
+points(bp, t(mean_matrix[1,m_order])/10000, col = "blue", lwd = 2)
+points(bp, df$counts/ymax*100, pch = 19, cex = 1.5)
+axis(4,at=c(0,20,40,60,80,100), labels=c("0","100","200","300","400","500"))
+mtext("Number of switching operations", side = 4, line = 3, font = 2)
+axis(1, at=bp, labels=df$date)
+
+
+# barplot(sort(s_scores), names.arg = s_rank, xlab ="Countries",
+#         ylab = "Native vs IMM", main = "SCIENCE", col = "blue")
+barplot(sort(r_scores), names.arg = r_rank, xlab ="Countries",
+        ylab = "Native vs IMM", main = "READING", col = "blue")
+
+x11(width = 18, height = 15)
+par(mfrow = c(2,1))
+points(t(mean_matrix[1,]), pch=0, col="red", ylim=c(450,550), xaxt="n")
+axis(1,                         # Define x-axis manually
+     at = 1:11,
+     labels = name_countries)
+points(t(mean_matrix[2,]),pch=1)
 barplot(sort(m_scores), names.arg = m_rank, xlab ="Countries",
         ylab = "Native vs IMM", main = "MATH", col = "red")
-barplot(sort(s_scores), names.arg = s_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "SCIENCE", col = "blue")
+# barplot(sort(s_scores), names.arg = s_rank, xlab ="Countries",
+#         ylab = "Native vs IMM", main = "SCIENCE", col = "blue")
 barplot(sort(r_scores), names.arg = r_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = "READING", col = "green")
-
+        ylab = "Native vs IMM", main = "READING", col = "blue")
 
 ## GRAPH WAS SAVED AS : barplot_performances_countries
 
-graphics.off()
 
 
   
