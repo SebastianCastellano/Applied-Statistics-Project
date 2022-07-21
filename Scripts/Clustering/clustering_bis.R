@@ -2,7 +2,7 @@
 # k-means with 'math', 'ESCS_status' and 'learn_time_math'
 
 # CLEANE DATASETS
-setwd("D:/APPLIED/PROGETTO/DATA")
+
 ITA <- read.table(file = "student_ita.txt", header = T)
 AUT <- read.table(file = "student_aut.txt", header = T)
 BEL <- read.table(file = "student_bel.txt", header = T)
@@ -92,16 +92,17 @@ for (i in 1:n_countries) {
   perc_immig[6,i] = native3/tot_native
   
   # Graphical Representation
+  color = c('pink', 'khaki', 'lightgreen')
   par(mfrow = c(2,2))
-  boxplot(math~cluster, Y, col = "gold", main = name_countries[i])
-  boxplot(read~cluster, Y, col = "gold", main = name_countries[i])
-  boxplot(ESCS_status~cluster, Y, col = "gold", main = name_countries[i])
+  boxplot(math~cluster, Y, col = color, main = name_countries[i])
+  boxplot(read~cluster, Y, col = color, main = name_countries[i])
+  boxplot(ESCS_status~cluster, Y, col = color, main = name_countries[i])
   barplot(perc_immig[1:3,i], names.arg = c('1','2','3')
-          , ylim = c(0,1), main = 'Percentage of immigrants in each cluster')
-  boxplot(short_edu_staff~cluster, Y, col = "gold", main = name_countries[i])
-  boxplot(short_edu_mat~cluster, Y, col = "gold", main = name_countries[i])
-  boxplot(stu_behav~cluster, Y, col = "gold", main = name_countries[i])
-  boxplot(teach_behav~cluster, Y, col = "gold", main = name_countries[i])
+          , ylim = c(0,1), col = color, main = 'Percentage of immigrants in each cluster')
+  boxplot(short_edu_staff~cluster, Y, col = color, main = name_countries[i])
+  boxplot(short_edu_mat~cluster, Y, col = color, main = name_countries[i])
+  boxplot(stu_behav~cluster, Y, col = color, main = name_countries[i])
+  boxplot(teach_behav~cluster, Y, col = color, main = name_countries[i])
  
 }
 
