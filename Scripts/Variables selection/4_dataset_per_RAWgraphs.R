@@ -1,3 +1,5 @@
+# DATASET FOR RAW GRAPHS 
+
 ITA= read.table(file = "student_ita.txt", header = T)
 AUT= read.table(file = "student_aut.txt", header = T)
 BEL= read.table(file = "student_bel.txt", header = T)

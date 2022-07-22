@@ -1,9 +1,5 @@
-#Script to extract all student data from all european countries
+## SCRIPT TO EXTRACT ALL STUDENT DATA FROM ALL EUROPEAN COUNTRIES 
 
-#Import libraries
-#library(sas7bdat)  #Prof Masci library - didn't work anymore
-#student = read.sas7bdat(file='cy07_msu_stu_qqq.sas7bdat')
-install.packages("haven")
 library(haven)
 
 # Read OECD Pisa 2018 student file
@@ -51,25 +47,27 @@ UKR = student[which(student$CNTRYID==804),]
 MKD = student[which(student$CNTRYID==807),]
 GBR = student[which(student$CNTRYID==826),]
 
-#List of countries
+# List of countries
 countries = list(ITA, ALB, AUT, BEL, BIH, BGR, BLR, HRV, CZE, DNK, EST, FIN, FRA, DEU, GRC, HUN, ISL, KSV, LVA,
                  LTU, LUX, MLT, MDA, MNE, NDL, NOR, POL, PRT, ROU, SRB, SVK, SVN, ESP, SWE, CHE, TUR, UKR, MKD, GBR)
 
-#List of names of countries
+# List of names of countries
 name_countries = c('ITA', 'ALB', 'AUT', 'BEL', 'BIH', 'BGR', 'BLR', 'HRV', 'CZE', 'DNK', 'EST', 'FIN', 'FRA',
                    'DEU', 'GRC', 'HUN', 'ISL', 'KSV', 'LVA', 'LTU', 'LUX', 'MLT', 'MDA', 'MNE', 'NDL', 'NOR',
                    'POL', 'PRT', 'ROU', 'SRB', 'SVK', 'SVN', 'ESP', 'SWE', 'CHE', 'TUR', 'UKR', 'MKD', 'GBR')
 
-#Select countries with enough immigrant data
 
-#Initialize params & vectors
-n_countries = length(countries)  # there are 39 european countries
+## Selection of countries with enough immigrant data
+
+# Initialization of parameters and vectors
+n_countries = length(countries)    # 39
 stud_country = rep(0,n_countries)
 immig_stud_country = rep(0,n_countries)
 immig_stud_1stgen_country = rep(0,n_countries)
 immig_stud_2ndgen_country = rep(0,n_countries)
 
-#Extract lengths and num of immig stud per country (the variable IMMIG has 1 = native, 2 = second gen, 3 = first gen)
+# Extract lengths and number of immigrant students per country (the variable IMMIG has 1 = native, 
+# 2 = second generation immigrant, 3 = first generation immigrant)
 for (i in 1:n_countries) {
   stud_country[i] = dim(countries[[i]])[1]  #notice: this number does not account for missing values
   immig_stud_country[i] = sum(na.omit(countries[[i]]$IMMIG==2 | countries[[i]]$IMMIG==3))
@@ -77,7 +75,7 @@ for (i in 1:n_countries) {
   immig_stud_2ndgen_country[i] = sum(na.omit(countries[[i]]$IMMIG==2))
 }
 
-#Plot
+# Plot
 x11()
 df_bar <- barplot(stud_country, main = "Students per Country - OECD Pisa 2018", ylab = "Number of students", xlab = "Countries",  
                   ylim = c(0,12000), names.arg = name_countries, las=2) #las=2 -> rotates names.arg
@@ -88,15 +86,16 @@ legend(n_countries/2, 12000, c("Immig stud total","First gen immig stud","Second
        pch = c(19,19,19), col = c("red","blue","purple"), cex = 1)
 abline(h=1000) 
 
-#Select countries with enough sample size
+# Select countries with enough sample size
 countries_selected = countries[which(immig_stud_country>1000)]
 name_countries_selected = name_countries[which(immig_stud_country>1000)]
-#We select 10 countries:
-# name_countries_selected = list("ITA", "AUT", "BEL", "DNK", "DEU",
-#                                  "LUX", "ESP", "SWE", "CHE", "GBR")
+
+# => we select 10 countries:
+#    name_countries_selected = list("ITA", "AUT", "BEL", "DNK", "DEU",
+#                                     "LUX", "ESP", "SWE", "CHE", "GBR")
 
 
-#Write tables (already run)
+# Write tables (already run):
 # write.table(ITA,file='italy.txt')
 # write.table(AUT,file='austria.txt')
 # write.table(BEL,file='belgium.txt')
