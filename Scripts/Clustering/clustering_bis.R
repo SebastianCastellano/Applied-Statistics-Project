@@ -1,8 +1,7 @@
 # CLUSTERING ANALYSIS OF ALL EUROPEAN COUNTRIES 
 # k-means with 'math', 'ESCS_status' and 'learn_time_math'
 
-# CLEANE DATASETS
-
+# Datasets
 ITA <- read.table(file = "student_ita.txt", header = T)
 AUT <- read.table(file = "student_aut.txt", header = T)
 BEL <- read.table(file = "student_bel.txt", header = T)
@@ -21,7 +20,6 @@ n_countries <- length(countries)
 
 varID = c('math', 'ESCS_status', 'learn_time_math', 'short_edu_mat', 'read', 'learn_time_read', 'short_edu_staff', 'stu_behav', 'teach_behav')
 
-# MATH AND WEALTH VARIABLES----
 
 # For choosing k
 
@@ -40,7 +38,7 @@ perc_immig <- as.data.frame(matrix(ncol=11,nrow=6))
 names(perc_immig) <- name_countries
 num_clusters <- as.data.frame(matrix(ncol=11,nrow=3))
 names(num_clusters) <- name_countries
-# How much the clustering reduces the entropy
+
 orderGain = rep(0,n_countries)
 for (i in 1:n_countries) {
   
@@ -48,7 +46,8 @@ for (i in 1:n_countries) {
   X = data.frame(scale(CNT[,varID]))
   n = dim(X)[1]
   
-  ##################################### K-MEANS CLUSTERING #########################################
+  ## K-MEANS CLUSTERING ##
+  
   C = kmeans(X,k)
   
   orderGain[i] = 100 - C$tot.withinss/C$totss*100
@@ -62,7 +61,6 @@ for (i in 1:n_countries) {
   }
   Y = X
   Y$cluster = clusters
-  
   
   num_clusters[1,i] <- dim(CNT[which(clusters==1),])[1]
   num_clusters[2,i] <- dim(CNT[which(clusters==2),])[1]
@@ -78,7 +76,6 @@ for (i in 1:n_countries) {
   perc_immig[1,i] = immig1/tot_immig
   perc_immig[2,i] = immig2/tot_immig
   perc_immig[3,i] = immig3/tot_immig
-  
   
   tot_native <- length(which(CNT$immigration==1))
   native_1cl <- CNT$immigration[clusters==1]
