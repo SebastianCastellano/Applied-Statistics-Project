@@ -1,13 +1,10 @@
-#Script to extract the most relevant features
+# SCRIPT TO EXTRACT THE MOST RELEVANT FEATURES 
 
-#Import Labraries
-#library(sas7bdat)
+# library(sas7bdat)
 library(labstatR)
-#install.packages("naniar")
-#library(naniar)
+# library(naniar)
 
-
-#Import the students data of selected countries
+# Import the students data of selected countries
 setwd("~/GitHub/Applied-Statistics-Project/txt - files/European countries raw")
 ITA= read.table(file = "italy.txt", header = T)
 AUT= read.table(file = "austria.txt", header = T)
@@ -16,7 +13,8 @@ DNK= read.table(file = "denmark.txt", header = T)
 DEU= read.table(file = "germany.txt", header = T)
 LUX= read.table(file = "luxembourg.txt", header = T)
 
-ESP1= read.table(file = "spain1.txt", header = T) #spain is divided in three files because github can't handle files bigger than 100mb
+# Spain is divided in three files because github can't handle files bigger than 100mb
+ESP1= read.table(file = "spain1.txt", header = T)    
 ESP2= read.table(file = "spain2.txt", header = T)
 ESP3= read.table(file = "spain3.txt", header = T)
 ESP = rbind(ESP1,ESP2,ESP3)
@@ -26,30 +24,29 @@ SWE= read.table(file = "sweden.txt", header = T)
 CHE= read.table(file = "swiss.txt", header = T)
 GBR= read.table(file = "greatbrit.txt", header = T)
 
-#List of countries to iterate through
+# List of countries to iterate through
 countries = list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR)
-name_countries = c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR") #List of names of countries
-name_files = c('student_ita.txt', 'student_aut.txt', 'student_bel.txt', 'student_dnk.txt', 'student_deu.txt', 'student_lux.txt', 'student_esp.txt',
-               'student_swe.txt', 'student_che.txt', 'student_gbr.txt')
+name_countries = c("ITA", "AUT", "BEL", "DNK", "DEU", "LUX", "ESP", "SWE", "CHE", "GBR") 
+name_files = c('student_ita.txt', 'student_aut.txt', 'student_bel.txt', 'student_dnk.txt', 'student_deu.txt', 
+               'student_lux.txt', 'student_esp.txt', 'student_swe.txt', 'student_che.txt', 'student_gbr.txt')
 n_countries = length(countries) 
 
-#Import school data
+# Import school data
 library(haven)
-school <- read_sas("C:/Users/sebas/OneDrive/Desktop/Poli 2021-2022/Applied Statistics/Project/SCH/cy07_msu_sch_qqq.sas7bdat")
+school <- read_sas("cy07_msu_sch_qqq.sas7bdat")
 
-#Create school data.frame (then we will merge it with student data in the loop below)
+# Create school data.frame (then we will merge it with student data in the loop below)
 school_features <- data.frame(school_id = as.character(school$CNTSCHID),
                     class_size = school$CLSIZE, 
                     stud_teach_ratio = school$STRATIO,
-                    short_edu_mat = school$EDUSHORT, #shortage of education material (WLE)
-                    short_edu_staff = school$STAFFSHORT, #shortage in staff (WLE)
-                    stu_behav = school$STUBEHA, #student behavior hindering learning (WLE)
-                    teach_behav = school$TEACHBEHA, #teacher behavior hindering learning (WLE)
-                    teach_multicult = school$SCMCEG, #School principal's view on teachers' multicultural and egalitarian beliefs (WLE)
+                    short_edu_mat = school$EDUSHORT,       # shortage of education material (WLE)
+                    short_edu_staff = school$STAFFSHORT,   # shortage in staff (WLE)
+                    stu_behav = school$STUBEHA,            # student behavior hindering learning (WLE)
+                    teach_behav = school$TEACHBEHA,        # teacher behavior hindering learning (WLE)
+                    teach_multicult = school$SCMCEG,       # school principal's view on teachers' multicultural and egalitarian beliefs (WLE)
                     private = school$PRIVATESCH)
 
-#Variable selection
-setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features2")
+# Variable selection
 for (i in 1:n_countries) {
   # Categorical variables:
   # school ID
@@ -64,29 +61,29 @@ for (i in 1:n_countries) {
   student = data.frame(school_id = school_id, 
                        gender = gender, 
                        immigration = immigration, 
-                       language = countries[[i]]$LANGN, #language spoken at home
-                       hisced = countries[[i]]$HISCED,  #highest education of parent
+                       language = countries[[i]]$LANGN,                # language spoken at home
+                       hisced = countries[[i]]$HISCED,                 # highest education of parent
                        grade_rep = grade_rep, 
                        # joy_read = countries[[i]]$JOYREAD, 
-                       # pisa_difficulty = countries[[i]]$PISADIFF, #perception of difficulty of the pisa test
+                       # pisa_difficulty = countries[[i]]$PISADIFF,    # perception of difficulty of the Pisa test
                        # competitiveness = countries[[i]]$COMPETE,
                        fear_failure = countries[[i]]$GFOFAIL, 
                        # resilience = countries[[i]]$RESILIENCE, 
-                       belonging = countries[[i]]$BELONG, #sense of belonging in school
+                       belonging = countries[[i]]$BELONG,              # sense of belonging in school
                        bullied = countries[[i]]$BEINGBULLIED,
                        #home_poss = countries[[i]]$HOMEPOS, 
                        #cult_poss = countries[[i]]$CULTPOSS, 
-                       #edu_resources = countries[[i]]$HEDRES, #home educational resources
+                       #edu_resources = countries[[i]]$HEDRES,         # home educational resources
                        #family_wealth = countries[[i]]$WEALTH,  
-                       ESCS_status = countries[[i]]$ESCS, #Index of economic, social and cultural status
-                       teacher_support = countries[[i]]$TEACHSUP, #Teacher support in test language lessons
-                       emo_sup = countries[[i]]$EMOSUPS, #Parents' emotional support perceived by student
+                       ESCS_status = countries[[i]]$ESCS,              # index of economic, social and cultural status
+                       teacher_support = countries[[i]]$TEACHSUP,      # teacher support in test language lessons
+                       emo_sup = countries[[i]]$EMOSUPS,               # parents' emotional support perceived by student
                        
-                       school_changes = countries[[i]]$SCCHANGE, #respect for people from other cultures
-                       learn_time_math = countries[[i]]$MMINS, #minutes per week studying math
-                       learn_time_read = countries[[i]]$LMINS, #minutes per week studying test language
-                       learn_time_scie = countries[[i]]$SMINS, #minutes per week studying science
-                       
+                       school_changes = countries[[i]]$SCCHANGE,       # respect for people from other cultures
+                       learn_time_math = countries[[i]]$MMINS,         # minutes per week studying math
+                       learn_time_read = countries[[i]]$LMINS,         # minutes per week studying test language
+                       learn_time_scie = countries[[i]]$SMINS,         # minutes per week studying science
+                        
                        math = countries[[i]]$PV3MATH, 
                        read = countries[[i]]$PV3READ,
                        scie = countries[[i]]$PV3SCIE)
@@ -97,8 +94,7 @@ for (i in 1:n_countries) {
   
 }
 
-#Check that all countries have enough values for each feature
-setwd("~/GitHub/Applied-Statistics-Project/txt - files/stud_school_features2")
+# Check that all countries have enough values for each feature
 ITA= read.table(file = "student_ita.txt", header = T)
 AUT= read.table(file = "student_aut.txt", header = T)
 BEL= read.table(file = "student_bel.txt", header = T)
@@ -111,8 +107,9 @@ CHE= read.table(file = "student_che.txt", header = T)
 GBR= read.table(file = "student_gbr.txt", header = T)
 
 countries = list(ITA, AUT, BEL, DNK, DEU, LUX, ESP, SWE, CHE, GBR)
+I
+# n order to see the number of NA: apply(X = is.na(student), MARGIN = 2, FUN = sum)
 
-#in order to see the number of NA: apply(X = is.na(student), MARGIN = 2, FUN = sum)
 library(visdat)
 for (i in 1:n_countries){
   #x11()
@@ -121,7 +118,7 @@ for (i in 1:n_countries){
   print(names(countries[[i]])[which(apply(X=is.na(countries[[i]]),MARGIN=2,FUN=sum)>0.8*dim(countries[[i]])[1])])
 }
 
-#Missing features for each country:
+# Missing features for each country:
 #  "ITA"
 #  no feature largely missing
 #  "AUT"
@@ -143,12 +140,12 @@ for (i in 1:n_countries){
 #  "GBR"
 #  "immig_att" "aware_int_com" "respect"  "teach_multicult"
 
-#other features removed because too many NA: 
+# Other features removed because there were too many NA: 
 # countries[[i]]$EMOSUPP,  countries[[i]]$DISCRIM, stratum, ITA$WB032Q01NA, ITA$WB031Q01NA, ITA$SWBP, ITA$WB154Q04HA, ITA$WB154Q05HA,
 # ITA$WB154Q06HA, ITA$WB154Q07HA, ITA$WB154Q08HA, ITA$WB154Q09HA
-# possibile to add: countries[[i]]$COBN_M, countries[[i]]$COBN_F, countries[[i]]$COBN_S
+# Possibile to add: countries[[i]]$COBN_M, countries[[i]]$COBN_F, countries[[i]]$COBN_S
 
-#remove columns with too many NA and re-save the datasets
+# Remove columns with too many NA and re-save the datasets
 for (i in 1:n_countries){
   dim1 <- dim(countries[[i]])[1]
   miss_feat <- which(apply(X=is.na(countries[[i]]),MARGIN=2,FUN=sum)>0.8*dim1)
@@ -159,7 +156,11 @@ for (i in 1:n_countries){
   write.table(na.omit(countries[[i]]), file=name_files[i]) # commented because already done
 }
 
-# Create collective dataset
+
+# EUR 
+
+# Create collective dataset for European countries 
+
 countries = list(AUT, BEL, CHE, DEU, DNK,  ESP, GBR, ITA, LUX, SWE) 
 name_countries = c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX", "SWE")
 n_countries = length(countries) 
