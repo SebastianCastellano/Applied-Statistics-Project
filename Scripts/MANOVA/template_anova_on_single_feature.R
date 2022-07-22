@@ -20,15 +20,15 @@ name_countries <- c("AUT", "BEL", "CHE", "DEU", "DNK", "ESP", "GBR", "ITA", "LUX
 n_countries <- length(countries) 
 
 # MODIFY BELOW BASE ON SELECTED VARIABLE
-variable <- "Belonging" #for print purposes
+variable <- "Grade repetition" #for print purposes
 variable_scores <- rep(0, n_countries) #will fill with native-immig mean scores for each country
 
 for (i in 1:n_countries) {
   
   # BUILD DATAFRAMES ----
   
-  X = data.frame(countries[[i]]$belonging) # Change this according to variable of interest
-  names(X) = c("belonging")
+  X = data.frame(countries[[i]]$grade_rep) # Change this according to variable of interest
+  names(X) = c("grade_rep")
   immStatus = countries[[i]]$immigration
 
   
@@ -132,8 +132,8 @@ variable_rank = name_countries[variable_order]
 
 # GRAPHICAL VISUALIZATION ----
 x11()
-par(las=2)
+par(las=2, cex.main=2)
 barplot(sort(variable_scores), names.arg = variable_rank, xlab ="Countries",
-        ylab = "Native vs IMM", main = variable, col = "blue")
+        ylab = "Native vs IMM", main = variable, col = "olivedrab1")
 
 

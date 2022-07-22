@@ -261,6 +261,7 @@ PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE #0.04293131
 
 ## visualization of the random intercepts with their 95% confidence intervals
+par(main='Math')
 dotplot(ranef(lmm3, condVar=T))
 ranef(lmm3, condVar=T)
 
