@@ -1,3 +1,5 @@
+# LINEAR MIXED MODELS (Denmark , read , school)
+
 library(MASS)
 library(car)
 library(rgl)
@@ -8,7 +10,7 @@ library(corrplot)
 library(nlme)
 library(lattice)
 library(plot.matrix)
-library(lme4) #main package but only w/ resduals indep and homosk
+library(lme4)       # Main package but only with independent and homoschedastic residuals
 library(insight)
 
 library(ggplot2)
@@ -26,7 +28,7 @@ table(studentsData$immigration)
 #studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 
-#read
+
 x11()
 ggplot(data=studentsData, aes(x=as.factor(school_id), y=read, fill=as.factor(school_id))) +
   geom_boxplot() +
@@ -52,7 +54,7 @@ summary(lm1)
 plot(lm1$residuals)
 
 boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData ID', ylab='Residuals')
-## residuals differ a lot across schools
+## Residuals differ a lot across schools
 
 #-----------------------------#
 # Linear Mixed Effects Models #
@@ -78,8 +80,7 @@ sigma2_eps <- as.numeric(get_variance_residual(lmm1))
 sigma2_eps
 sigma2_b <- as.numeric(get_variance_random(lmm1))
 sigma2_b
-
-#Percentage of Variance explained by the Random Effect (PVRE).
+# Percentage of Variance explained by the Random Effect (PVRE)
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE #0.05410083
 
@@ -93,7 +94,7 @@ dotplot(ranef(lmm1))
 # Random intercepts and fixed slopes: (beta_0+b_0i, beta_1, beta_2)
 coef(lmm1)
 
-## visualization of the coefficients
+## Visualization of the coefficients
 x11()
 par(mfrow=c(1,3))
 plot(unlist(coef(lmm1)$school_id[1]),
@@ -143,9 +144,9 @@ lmm2 = lmer(read ~ gender + immigration + language + hisced + grade_rep +
             data = studentsData)
 summary(lmm2)
 
-confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
+confint(lmm2, oldNames=TRUE)
 fixef(lmm2)
-
+# Since sig02 is not significant (and is related to the correlation) we try the model below 
 # Yet another point of interest is the correlation of the intercepts and slopes. In this case it's -0.03. 
 # That's pretty small, but the interpretation is the same as with any correlation. 
 
@@ -156,9 +157,9 @@ sigma2_eps <- as.numeric(get_variance_residual(lmm2))
 sigma2_eps
 sigma2_b <- as.numeric(get_variance_random(lmm2))  ## it automatically computes Var(b0,b1)
 sigma2_b
-
+# Percentage of Variance explained by the Random Effect (PVRE)
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.0637712
+PVRE   # 0.0637712
 
 # Estimates of fixed and random effects
 
@@ -208,7 +209,6 @@ x11()
 qqnorm(resid(lmm2))
 qqline(resid(lmm2), col='red', lwd=2)
 
-
 # 2) Assessing Assumption on the Random Effects
 x11()
 par(mfrow=c(1,2))
@@ -228,10 +228,10 @@ abline(v=0,h=0)
 
 # Comparing models
 anova(lmm1, lmm2)
-#the two models are essentially the same, lmm2 has a slightly less AIC
+# The two models are essentially the same, lmm2 has a slightly less AIC
 
 
-## We observe that the correlation between d_11 and d_22 id very low, 
+## We observe that the correlation between d_11 and d_22 id very low; 
 ## we fit a new model with a diagonal D matrix
 lmm3 <- lmer(read ~ gender + immigration + language + hisced + grade_rep +  
                + ESCS_status + teacher_support + emo_sup + school_changes + learn_time_read + 
@@ -243,16 +243,15 @@ summary(lmm3)
 confint(lmm3,oldNames=TRUE)
 fixef(lmm3)
 
-# PVRE
 sigma2_eps <- as.numeric(get_variance_residual(lmm3))
 sigma2_eps
 sigma2_b <- as.numeric(get_variance_random(lmm3)) + as.numeric(get_variance_slope(lmm3))
 sigma2_b
-
+# Percentage of Variance explained by the Random Effect (PVRE)
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.1208163
+PVRE   # 0.1208163
 
-## visualization of the random intercepts with their 95% confidence intervals
+## Visualization of the random intercepts with their 95% confidence intervals
 dotplot(ranef(lmm3, condVar=T))
 ranef(lmm3, condVar=T)
 
@@ -262,6 +261,6 @@ ranef(lmm3, condVar=T)
 # produces likelihood ratio tests comparing the models.
 anova(lmm2, lmm3)
 anova(lmm1, lmm3)
-#according to the p-values the models are essentially the same, so we choose the one with lower AIC (lmm3)
+# According to the p-values the models are essentially the same, so we choose the one with lower AIC (lmm3)
 
 

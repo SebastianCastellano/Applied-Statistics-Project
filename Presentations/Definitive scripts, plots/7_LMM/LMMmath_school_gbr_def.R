@@ -1,3 +1,5 @@
+# LINEAR MIXED MODELS (Great Britain , math , school)
+
 library(MASS)
 library(car)
 library(rgl)
@@ -26,7 +28,7 @@ table(studentsData$immigration)
 #studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 
-#math
+
 x11()
 ggplot(data=studentsData, aes(x=as.factor(school_id), y=math, fill=as.factor(school_id))) +
   geom_boxplot() +
@@ -49,7 +51,7 @@ summary(lm1)
 plot(lm1$residuals)
 
 boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData ID', ylab='Residuals')
-## residuals differ a lot across schools
+## Residuals differ a lot across schools
 
 #-----------------------------#
 # Linear Mixed Effects Models #
@@ -67,7 +69,7 @@ summary(lmm1)
 confint(lmm1, oldNames=TRUE)
 fixef(lmm1)
 
-#hisced e learn_time_math non significant al 95%
+# hisced e learn_time_math non significant al 95%
 lmm1 = lmer(math ~ gender + fear_failure + bullied + ESCS_status + 
               + (1|school_id), 
             data = studentsData)
@@ -86,10 +88,9 @@ sigma2_eps <- as.numeric(get_variance_residual(lmm1))
 sigma2_eps
 sigma2_b <- as.numeric(get_variance_random(lmm1))
 sigma2_b
-
-#Percentage of Variance explained by the Random Effect (PVRE).
+# Percentage of Variance explained by the Random Effect (PVRE)
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.1365507
+PVRE   # 0.1365507
 
 # Random effects: b_0i
 #----------------------------
@@ -101,7 +102,7 @@ dotplot(ranef(lmm1))
 # Random intercepts and fixed slopes: (beta_0+b_0i, beta_1, beta_2)
 coef(lmm1)
 
-## visualization of the coefficients
+## Visualization of the coefficients
 x11()
 par(mfrow=c(1,3))
 plot(unlist(coef(lmm1)$school_id[1]),

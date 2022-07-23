@@ -1,4 +1,4 @@
-# LINEAR MIXED MODELS (Denmark , school)
+# LINEAR MIXED MODELS (Denmark , math , school)
 
 library(MASS)
 library(car)

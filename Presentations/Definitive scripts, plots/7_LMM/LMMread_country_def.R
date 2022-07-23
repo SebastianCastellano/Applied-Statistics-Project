@@ -1,14 +1,15 @@
+# LINEAR MIXED MODELS (read, country)
+
 library(MASS)
 library(car)
 library(rgl)
-
 
 library(nlmeU)
 library(corrplot)
 library(nlme)
 library(lattice)
 library(plot.matrix)
-library(lme4) #main package but only w/ resduals indep and homosk
+library(lme4)      # Main package but only with independent and homoschedastic residuals 
 library(insight)
 
 library(ggplot2)
@@ -25,7 +26,7 @@ studentsData$immigration[which(studentsData$immigration==2 + I(studentsData$immi
 table(studentsData$immigration)
 studentsData$country= as.factor(studentsData$country)
 
-#read
+
 x11()
 ggplot(data=studentsData, aes(x=as.factor(country), y=read, fill=as.factor(country))) +
   geom_boxplot() +
@@ -51,7 +52,7 @@ summary(lm1)
 plot(lm1$residuals)
 
 boxplot(lm1$residuals ~ studentsData$country, col='orange', xlab='country', ylab='Residuals')
-# residuals don't differ a lot across countries
+# Residuals don't differ a lot across countries
 
 #-----------------------------#
 # Linear Mixed Effects Models #
@@ -79,7 +80,7 @@ sigma2_b <- as.numeric(get_variance_random(lmm1))
 sigma2_b
 #Percentage of Variance explained by the Random Effect (PVRE).
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.01480574
+PVRE   # 0.01480574
 
 # Random effects: b_0i
 ranef(lmm1)
@@ -91,7 +92,7 @@ dotplot(ranef(lmm1))
 # Random intercepts and fixed slopes: (beta_0+b_0i, beta_1, beta_2)
 coef(lmm1)
 
-## visualization of the coefficients
+## Visualization of the coefficients
 x11()
 par(mfrow=c(1,3))
 plot(unlist(coef(lmm1)$country[1]),
@@ -140,10 +141,12 @@ lmm2 = lmer(read ~ gender + immigration + language + hisced + grade_rep + fear_f
             data = studentsData)
 summary(lmm2)
 
-confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
+confint(lmm2, oldNames=TRUE) 
 fixef(lmm2)
+# Since sig02 is not significant (and it is related with correlation) we try the model below 
 
-#non significtaivo immigration:grade_rep
+# immigration:grade_rep is not significant 
+
 lmm2 = lmer(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
               + ESCS_status + teacher_support + emo_sup + learn_time_read + 
               + immigration:fear_failure + immigration:belonging +  
@@ -151,8 +154,9 @@ lmm2 = lmer(read ~ gender + immigration + language + hisced + grade_rep + fear_f
             data = studentsData)
 summary(lmm2)
 
-confint(lmm2, oldNames=TRUE) #non è significativo sig02 che si riferisce alla correlazione, provo il modello sotto
+confint(lmm2, oldNames=TRUE) 
 fixef(lmm2)
+# Since sig02 is not significant (and it is related with correlation) we try the model below 
 # Yet another point of interest is the correlation of the intercepts and slopes. In this case it's -0.29. 
 # That's pretty small, but the interpretation is the same as with any correlation. 
 
@@ -163,9 +167,9 @@ sigma2_eps <- as.numeric(get_variance_residual(lmm2))
 sigma2_eps
 sigma2_b <- as.numeric(get_variance_random(lmm2))  ## it automatically computes Var(b0,b1)
 sigma2_b
-
+# Percentage of Variance explained by the Random Effect (PVRE)
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.01839689
+PVRE   # 0.01839689
 
 # Estimates of fixed and random effects
 
@@ -215,7 +219,6 @@ x11()
 qqnorm(resid(lmm2))
 qqline(resid(lmm2), col='red', lwd=2)
 
-
 # 2) Assessing Assumption on the Random Effects
 x11()
 par(mfrow=c(1,2))
@@ -238,7 +241,7 @@ anova(lmm1, lmm2)
 # The p-value for the test is essentially zero -> we prefer lmm2 (which has also lower AIC)
 
 
-## We observe that the correlation between d_11 and d_22 id very low, 
+## We observe that the correlation between d_11 and d_22 id very low;
 ## we fit a new model with a diagonal D matrix
 lmm3 <- lmer(read ~ gender + immigration + language + hisced + grade_rep + fear_failure + belonging + bullied + 
                + ESCS_status + teacher_support + emo_sup + learn_time_read + 
@@ -251,16 +254,15 @@ summary(lmm3)
 confint(lmm3,oldNames=TRUE)
 fixef(lmm3)
 
-# PVRE
 sigma2_eps <- as.numeric(get_variance_residual(lmm3))
 sigma2_eps
 sigma2_b <- as.numeric(get_variance_random(lmm3)) + as.numeric(get_variance_slope(lmm3))
 sigma2_b
-
+# Percentage of Variance explained by the Random Effect (PVRE)
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
 PVRE #0.04293131
 
-## visualization of the random intercepts with their 95% confidence intervals
+## Visualization of the random intercepts with their 95% confidence intervals
 dotplot(ranef(lmm3, condVar=T))
 ranef(lmm3, condVar=T)
 
@@ -269,4 +271,4 @@ ranef(lmm3, condVar=T)
 # The anova function, when given two or more arguments representing fitted models,
 # produces likelihood ratio tests comparing the models.
 anova(lmm2, lmm3)
-#according to the p-values the two models are essentially the same, so we choose the one with lower AIC (lmm3)
+# According to the p-values the two models are essentially the same, so we choose the one with lower AIC (lmm3)

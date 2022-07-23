@@ -1,14 +1,15 @@
+# LINEAR MIXED MODELS (Great Britain , read , school)
+
 library(MASS)
 library(car)
 library(rgl)
-
 
 library(nlmeU)
 library(corrplot)
 library(nlme)
 library(lattice)
 library(plot.matrix)
-library(lme4) #main package but only w/ resduals indep and homosk
+library(lme4)      # Main package but only with independent and homoschedastic residuals 
 library(insight)
 
 library(ggplot2)
@@ -26,7 +27,7 @@ table(studentsData$immigration)
 #studentsData$immigration= as.factor(studentsData$immigration)
 studentsData$school_id= as.factor(studentsData$school_id)
 
-#read
+
 x11()
 ggplot(data=studentsData, aes(x=as.factor(school_id), y=read, fill=as.factor(school_id))) +
   geom_boxplot() +
@@ -50,7 +51,7 @@ summary(lm1)
 plot(lm1$residuals)
 
 boxplot(lm1$residuals ~ studentsData$school_id, col='orange', xlab='studentsData ID', ylab='Residuals')
-## residuals differ a lot across schools
+## Residuals differ a lot across schools
 
 #-----------------------------#
 # Linear Mixed Effects Models #
@@ -69,7 +70,8 @@ summary(lmm1)
 confint(lmm1, oldNames=TRUE)
 fixef(lmm1)
 
-#immigration:gender e learn_time_read:immigration non significative
+# immigration:gender e learn_time_read:immigration are not significant 
+
 lmm1 = lmer(read ~ fear_failure + bullied + 
               + ESCS_status + teacher_support + learn_time_read + 
               + immigration:language + (1|school_id), 
@@ -89,10 +91,9 @@ sigma2_eps <- as.numeric(get_variance_residual(lmm1))
 sigma2_eps
 sigma2_b <- as.numeric(get_variance_random(lmm1))
 sigma2_b
-
-#Percentage of Variance explained by the Random Effect (PVRE).
+# Percentage of Variance explained by the Random Effect (PVRE)
 PVRE <- sigma2_b/(sigma2_b+sigma2_eps)
-PVRE #0.1068563
+PVRE   # 0.1068563
 
 # Random effects: b_0i
 #----------------------------
@@ -104,7 +105,7 @@ dotplot(ranef(lmm1))
 # Random intercepts and fixed slopes: (beta_0+b_0i, beta_1, beta_2)
 coef(lmm1)
 
-## visualization of the coefficients
+## Visualization of the coefficients
 x11()
 par(mfrow=c(1,3))
 plot(unlist(coef(lmm1)$school_id[1]),
